@@ -1,0 +1,7 @@
+{
+  "name": "Curiosity Hour",
+  "description": "A question game to help you get to know your partner or friend better",
+  "settings": {
+    "autoCommit": false
+  }
+}

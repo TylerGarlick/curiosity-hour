@@ -1,0 +1,14 @@
+[   73468ms] TypeError: Cannot convert undefined or null to object
+    at Object.entries (<anonymous>)
+    at applyTheme (http://localhost:3000/_next/static/chunks/_fa736310._.js:1285:12)
+    at setTheme (http://localhost:3000/_next/static/chunks/_fa736310._.js:1250:9)
+    at handlePresetClick (http://localhost:3000/_next/static/chunks/_fa736310._.js:1372:9)
+    at onClick (http://localhost:3000/_next/static/chunks/_fa736310._.js:1392:46)
+    at executeDispatch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10314:13)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:965:74)
+    at processDispatchQueue (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10340:41)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10615:13
+    at batchedUpdates$1 (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:2253:44)
+    at dispatchEventForPluginEventSystem (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10416:9)
+    at dispatchEvent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:12935:37)
+    at dispatchDiscreteEvent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:12917:64)
