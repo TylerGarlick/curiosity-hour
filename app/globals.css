@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light theme (default) */
+[data-theme="light"],
+:root {
+  --color-bg: #fefce8;
+  --color-surface: #ffffff;
+  --color-border: #fde68a;
+  --color-accent: #f59e0b;
+  --color-accent-hover: #d97706;
+  --color-text-primary: #1c1917;
+  --color-text-secondary: #78716c;
+  --color-track: #fef3c7;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --color-bg: #09090b;
+  --color-surface: #18181b;
+  --color-border: #27272a;
+  --color-accent: #f59e0b;
+  --color-accent-hover: #fbbf24;
+  --color-text-primary: #f4f4f5;
+  --color-text-secondary: #a1a1aa;
+  --color-track: #27272a;
+}
+
+/* Rose theme */
+[data-theme="rose"] {
+  --color-bg: #fff1f2;
+  --color-surface: #ffffff;
+  --color-border: #fecdd3;
+  --color-accent: #f43f5e;
+  --color-accent-hover: #e11d48;
+  --color-text-primary: #1c1917;
+  --color-text-secondary: #78716c;
+  --color-track: #ffe4e6;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+  }
+}

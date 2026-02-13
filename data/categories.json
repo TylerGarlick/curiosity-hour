@@ -1,0 +1,11 @@
+[
+  { "id": "general", "label": "General", "color": "amber", "friendSafe": true },
+  { "id": "funny", "label": "Funny", "color": "yellow", "friendSafe": true },
+  { "id": "would-you-rather", "label": "Would You Rather", "color": "sky", "friendSafe": true },
+  { "id": "deep", "label": "Deep", "color": "indigo", "friendSafe": true },
+  { "id": "spicy", "label": "Spicy", "color": "orange", "friendSafe": true },
+  { "id": "nostalgia", "label": "Nostalgia", "color": "teal", "friendSafe": true },
+  { "id": "intimate", "label": "Intimate", "color": "rose", "friendSafe": false },
+  { "id": "nsfw", "label": "NSFW", "color": "purple", "friendSafe": false },
+  { "id": "custom", "label": "Custom", "color": "stone", "friendSafe": true }
+]

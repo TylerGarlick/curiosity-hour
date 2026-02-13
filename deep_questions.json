@@ -1,0 +1,702 @@
+[
+  {
+    "id": "deep_001",
+    "text": "What does a meaningful life look like to you?"
+  },
+  {
+    "id": "deep_002",
+    "text": "How has your definition of success changed over time?"
+  },
+  {
+    "id": "deep_003",
+    "text": "What legacy do you want to leave behind?"
+  },
+  {
+    "id": "deep_004",
+    "text": "When do you feel most alive?"
+  },
+  {
+    "id": "deep_005",
+    "text": "What would you do if you knew you couldn't fail?"
+  },
+  {
+    "id": "deep_006",
+    "text": "How do you define happiness, and does it differ from what others say it should be?"
+  },
+  {
+    "id": "deep_007",
+    "text": "What parts of your life feel authentic versus performative?"
+  },
+  {
+    "id": "deep_008",
+    "text": "What's a belief you once held that you've since questioned?"
+  },
+  {
+    "id": "deep_009",
+    "text": "How has loss or grief shaped who you are today?"
+  },
+  {
+    "id": "deep_010",
+    "text": "What does freedom mean to you?"
+  },
+  {
+    "id": "deep_011",
+    "text": "If you could change one thing about society, what would it be?"
+  },
+  {
+    "id": "deep_012",
+    "text": "What do you think happens after we die?"
+  },
+  {
+    "id": "deep_013",
+    "text": "How do you grapple with your own mortality?"
+  },
+  {
+    "id": "deep_014",
+    "text": "What's worth suffering for?"
+  },
+  {
+    "id": "deep_015",
+    "text": "Do you believe in fate or free will, and why?"
+  },
+  {
+    "id": "deep_016",
+    "text": "What is the purpose of human existence, in your view?"
+  },
+  {
+    "id": "deep_017",
+    "text": "How do you reconcile the suffering in the world with hope?"
+  },
+  {
+    "id": "deep_018",
+    "text": "What does it mean to be a good person?"
+  },
+  {
+    "id": "deep_019",
+    "text": "When have you felt closest to understanding yourself?"
+  },
+  {
+    "id": "deep_020",
+    "text": "What are you afraid to admit about yourself?"
+  },
+  {
+    "id": "deep_021",
+    "text": "How do your values influence your daily decisions?"
+  },
+  {
+    "id": "deep_022",
+    "text": "What's a principle you would never compromise on?"
+  },
+  {
+    "id": "deep_023",
+    "text": "How do you define love in all its forms?"
+  },
+  {
+    "id": "deep_024",
+    "text": "What relationships have changed your perspective on life?"
+  },
+  {
+    "id": "deep_025",
+    "text": "Do you believe people can fundamentally change?"
+  },
+  {
+    "id": "deep_026",
+    "text": "What does forgiveness mean to you, and is it always possible?"
+  },
+  {
+    "id": "deep_027",
+    "text": "How do you balance self-care with service to others?"
+  },
+  {
+    "id": "deep_028",
+    "text": "What would you regret not doing in your lifetime?"
+  },
+  {
+    "id": "deep_029",
+    "text": "How do you want to be remembered?"
+  },
+  {
+    "id": "deep_030",
+    "text": "What brings you a sense of purpose?"
+  },
+  {
+    "id": "deep_031",
+    "text": "How do you handle the gap between who you are and who you want to be?"
+  },
+  {
+    "id": "deep_032",
+    "text": "What does community mean to you?"
+  },
+  {
+    "id": "deep_033",
+    "text": "How important is it to you to be liked versus to be respected?"
+  },
+  {
+    "id": "deep_034",
+    "text": "What's a truth you've learned through experience that surprised you?"
+  },
+  {
+    "id": "deep_035",
+    "text": "How do you cope with uncertainty about the future?"
+  },
+  {
+    "id": "deep_036",
+    "text": "What role does spirituality or religion play in your life?"
+  },
+  {
+    "id": "deep_037",
+    "text": "How do you find meaning in the small, everyday moments?"
+  },
+  {
+    "id": "deep_038",
+    "text": "What's the hardest truth you've accepted about yourself?"
+  },
+  {
+    "id": "deep_039",
+    "text": "How do you want to improve as a person in the next decade?"
+  },
+  {
+    "id": "deep_040",
+    "text": "What makes you feel like you're wasting your potential?"
+  },
+  {
+    "id": "deep_041",
+    "text": "Do you think happiness is a choice or a circumstance?"
+  },
+  {
+    "id": "deep_042",
+    "text": "How do you define integrity?"
+  },
+  {
+    "id": "deep_043",
+    "text": "What would you like to be known for?"
+  },
+  {
+    "id": "deep_044",
+    "text": "How do you balance ambition with contentment?"
+  },
+  {
+    "id": "deep_045",
+    "text": "What is the most important lesson life has taught you?"
+  },
+  {
+    "id": "deep_046",
+    "text": "How do you respond when your worldview is challenged?"
+  },
+  {
+    "id": "deep_047",
+    "text": "What fear have you overcome and how?"
+  },
+  {
+    "id": "deep_048",
+    "text": "How do you define success in relationships?"
+  },
+  {
+    "id": "deep_049",
+    "text": "What would it take for you to feel you've lived a good life?"
+  },
+  {
+    "id": "deep_050",
+    "text": "How has your identity evolved over the years?"
+  },
+  {
+    "id": "deep_051",
+    "text": "What's worth your time and energy?"
+  },
+  {
+    "id": "deep_052",
+    "text": "How do you handle failure?"
+  },
+  {
+    "id": "deep_053",
+    "text": "What does vulnerability mean to you?"
+  },
+  {
+    "id": "deep_054",
+    "text": "How do you want to grow emotionally?"
+  },
+  {
+    "id": "deep_055",
+    "text": "What injustice bothers you the most?"
+  },
+  {
+    "id": "deep_056",
+    "text": "How do you find peace with things outside your control?"
+  },
+  {
+    "id": "deep_057",
+    "text": "What role does creativity play in your sense of meaning?"
+  },
+  {
+    "id": "deep_058",
+    "text": "How do you define maturity?"
+  },
+  {
+    "id": "deep_059",
+    "text": "What's a sacrifice you've made and was it worth it?"
+  },
+  {
+    "id": "deep_060",
+    "text": "How do you want to be challenged?"
+  },
+  {
+    "id": "deep_061",
+    "text": "What does loyalty mean to you?"
+  },
+  {
+    "id": "deep_062",
+    "text": "How do you reconcile your past with who you want to become?"
+  },
+  {
+    "id": "deep_063",
+    "text": "What's the most profound realization you've had?"
+  },
+  {
+    "id": "deep_064",
+    "text": "How do you cultivate hope during difficult times?"
+  },
+  {
+    "id": "deep_065",
+    "text": "What does family mean to you?"
+  },
+  {
+    "id": "deep_066",
+    "text": "How do you want to spend your time differently?"
+  },
+  {
+    "id": "deep_067",
+    "text": "What's a version of yourself you've left behind?"
+  },
+  {
+    "id": "deep_068",
+    "text": "How do you define wisdom?"
+  },
+  {
+    "id": "deep_069",
+    "text": "What makes you feel like you belong?"
+  },
+  {
+    "id": "deep_070",
+    "text": "How do you handle the tension between duty and desire?"
+  },
+  {
+    "id": "deep_071",
+    "text": "What's your relationship with money and security?"
+  },
+  {
+    "id": "deep_072",
+    "text": "How do you want to impact others' lives?"
+  },
+  {
+    "id": "deep_073",
+    "text": "What would make you feel proud of yourself?"
+  },
+  {
+    "id": "deep_074",
+    "text": "How do you define courage?"
+  },
+  {
+    "id": "deep_075",
+    "text": "What's a mistake that taught you something invaluable?"
+  },
+  {
+    "id": "deep_076",
+    "text": "How do you maintain hope in a world with so much pain?"
+  },
+  {
+    "id": "deep_077",
+    "text": "What would you change about your upbringing if you could?"
+  },
+  {
+    "id": "deep_078",
+    "text": "How do you honor the people who've shaped you?"
+  },
+  {
+    "id": "deep_079",
+    "text": "What's the difference between existing and living?"
+  },
+  {
+    "id": "deep_080",
+    "text": "How do you define your worth?"
+  },
+  {
+    "id": "deep_081",
+    "text": "What role does wonder play in your life?"
+  },
+  {
+    "id": "deep_082",
+    "text": "How do you want to be loved?"
+  },
+  {
+    "id": "deep_083",
+    "text": "What's a boundary you've had to establish for your wellbeing?"
+  },
+  {
+    "id": "deep_084",
+    "text": "How do you find meaning during stagnation?"
+  },
+  {
+    "id": "deep_085",
+    "text": "What does authenticity cost you?"
+  },
+  {
+    "id": "deep_086",
+    "text": "How do you want to influence the people close to you?"
+  },
+  {
+    "id": "deep_087",
+    "text": "What's a truth you're still learning to accept?"
+  },
+  {
+    "id": "deep_088",
+    "text": "How do you balance independence with interdependence?"
+  },
+  {
+    "id": "deep_089",
+    "text": "What makes life worth living for you?"
+  },
+  {
+    "id": "deep_090",
+    "text": "How do you want to respond to injustice?"
+  },
+  {
+    "id": "deep_091",
+    "text": "What's a limiting belief you're trying to overcome?"
+  },
+  {
+    "id": "deep_092",
+    "text": "How do you define beauty beyond appearance?"
+  },
+  {
+    "id": "deep_093",
+    "text": "What role does solitude play in your wellbeing?"
+  },
+  {
+    "id": "deep_094",
+    "text": "How do you want to be challenged in your relationships?"
+  },
+  {
+    "id": "deep_095",
+    "text": "What's worth protecting in this world?"
+  },
+  {
+    "id": "deep_096",
+    "text": "How do you cultivate inner peace?"
+  },
+  {
+    "id": "deep_097",
+    "text": "What does it mean to live intentionally?"
+  },
+  {
+    "id": "deep_098",
+    "text": "How do you want your life to tell a story?"
+  },
+  {
+    "id": "deep_099",
+    "text": "What's a quality you admire that you want to develop?"
+  },
+  {
+    "id": "deep_100",
+    "text": "How do you reconcile ambition with humility?"
+  },
+  {
+    "id": "deep_101",
+    "text": "What does home mean to you?"
+  },
+  {
+    "id": "deep_102",
+    "text": "How do you handle disappointment in yourself?"
+  },
+  {
+    "id": "deep_103",
+    "text": "What's the most important question you've ever asked yourself?"
+  },
+  {
+    "id": "deep_104",
+    "text": "How do you want to contribute to something bigger than yourself?"
+  },
+  {
+    "id": "deep_105",
+    "text": "What makes you feel your life is progressing?"
+  },
+  {
+    "id": "deep_106",
+    "text": "How do you define trust?"
+  },
+  {
+    "id": "deep_107",
+    "text": "What's a fear that still holds you back?"
+  },
+  {
+    "id": "deep_108",
+    "text": "How do you honor what you've lost?"
+  },
+  {
+    "id": "deep_109",
+    "text": "What does it mean to love yourself?"
+  },
+  {
+    "id": "deep_110",
+    "text": "How do you want to challenge the status quo?"
+  },
+  {
+    "id": "deep_111",
+    "text": "What's a dream you've set aside and why?"
+  },
+  {
+    "id": "deep_112",
+    "text": "How do you find joy in simple things?"
+  },
+  {
+    "id": "deep_113",
+    "text": "What role does imagination play in your life?"
+  },
+  {
+    "id": "deep_114",
+    "text": "How do you want to be present with others?"
+  },
+  {
+    "id": "deep_115",
+    "text": "What's worth fighting for in your life?"
+  },
+  {
+    "id": "deep_116",
+    "text": "How do you define resilience?"
+  },
+  {
+    "id": "deep_117",
+    "text": "What's a privilege you have that you want to use more consciously?"
+  },
+  {
+    "id": "deep_118",
+    "text": "How do you want to grow intellectually?"
+  },
+  {
+    "id": "deep_119",
+    "text": "What makes you feel connected to something larger than yourself?"
+  },
+  {
+    "id": "deep_120",
+    "text": "How do you navigate conflicting values within yourself?"
+  },
+  {
+    "id": "deep_121",
+    "text": "What's a moment that shifted your entire perspective?"
+  },
+  {
+    "id": "deep_122",
+    "text": "How do you want to be vulnerable?"
+  },
+  {
+    "id": "deep_123",
+    "text": "What does success look like if money wasn't a factor?"
+  },
+  {
+    "id": "deep_124",
+    "text": "How do you define a life well-lived?"
+  },
+  {
+    "id": "deep_125",
+    "text": "What's a relationship that's taught you the most about yourself?"
+  },
+  {
+    "id": "deep_126",
+    "text": "How do you want to leave a positive mark on the world?"
+  },
+  {
+    "id": "deep_127",
+    "text": "What brings you closest to your authentic self?"
+  },
+  {
+    "id": "deep_128",
+    "text": "How do you define freedom from a spiritual perspective?"
+  },
+  {
+    "id": "deep_129",
+    "text": "What's a way you've grown that surprised you?"
+  },
+  {
+    "id": "deep_130",
+    "text": "How do you honor your own needs in a world of competing demands?"
+  },
+  {
+    "id": "deep_131",
+    "text": "What does self-respect look like to you?"
+  },
+  {
+    "id": "deep_132",
+    "text": "How do you want to engage with mortality?"
+  },
+  {
+    "id": "deep_133",
+    "text": "What's worth your allegiance?"
+  },
+  {
+    "id": "deep_134",
+    "text": "How do you find meaning when life feels random?"
+  },
+  {
+    "id": "deep_135",
+    "text": "What role does gratitude play in your happiness?"
+  },
+  {
+    "id": "deep_136",
+    "text": "How do you want to show up for the people you love?"
+  },
+  {
+    "id": "deep_137",
+    "text": "What's a strength you've had to learn how to use responsibly?"
+  },
+  {
+    "id": "deep_138",
+    "text": "How do you define personal integrity?"
+  },
+  {
+    "id": "deep_139",
+    "text": "What would make you feel like you've achieved enough?"
+  },
+  {
+    "id": "deep_140",
+    "text": "How do you want to age?"
+  },
+  {
+    "id": "deep_141",
+    "text": "What's a belief system you've had to rebuild?"
+  },
+  {
+    "id": "deep_142",
+    "text": "How do you find peace with your choices?"
+  },
+  {
+    "id": "deep_143",
+    "text": "What does it mean to be good at being human?"
+  },
+  {
+    "id": "deep_144",
+    "text": "How do you want to evolve as a person?"
+  },
+  {
+    "id": "deep_145",
+    "text": "What's a way you've compromised your values and how did you move forward?"
+  },
+  {
+    "id": "deep_146",
+    "text": "How do you cultivate meaning in your work?"
+  },
+  {
+    "id": "deep_147",
+    "text": "What role does compassion play in your life?"
+  },
+  {
+    "id": "deep_148",
+    "text": "How do you want to be honest with yourself?"
+  },
+  {
+    "id": "deep_149",
+    "text": "What's worth celebrating about your journey so far?"
+  },
+  {
+    "id": "deep_150",
+    "text": "How do you navigate the tension between accepting yourself and improving?"
+  },
+  {
+    "id": "deep_151",
+    "text": "What does connection truly mean to you?"
+  },
+  {
+    "id": "deep_152",
+    "text": "How do you want to spend your finite time?"
+  },
+  {
+    "id": "deep_153",
+    "text": "What's a truth about humanity that moves you?"
+  },
+  {
+    "id": "deep_154",
+    "text": "How do you define being a positive force?"
+  },
+  {
+    "id": "deep_155",
+    "text": "What role does exploration play in your sense of growth?"
+  },
+  {
+    "id": "deep_156",
+    "text": "How do you handle the weight of your own potential?"
+  },
+  {
+    "id": "deep_157",
+    "text": "What's worth your devotion?"
+  },
+  {
+    "id": "deep_158",
+    "text": "How do you find stillness in a chaotic world?"
+  },
+  {
+    "id": "deep_159",
+    "text": "What does it mean to truly listen to another person?"
+  },
+  {
+    "id": "deep_160",
+    "text": "How do you want your values to guide your life?"
+  },
+  {
+    "id": "deep_161",
+    "text": "What's the greatest gift you can give someone?"
+  },
+  {
+    "id": "deep_162",
+    "text": "How do you reconcile your dreams with reality?"
+  },
+  {
+    "id": "deep_163",
+    "text": "What makes you feel alive beyond achievement?"
+  },
+  {
+    "id": "deep_164",
+    "text": "How do you want to be remembered by those closest to you?"
+  },
+  {
+    "id": "deep_165",
+    "text": "What's a way you're still becoming?"
+  },
+  {
+    "id": "deep_166",
+    "text": "How do you find meaning in impermanence?"
+  },
+  {
+    "id": "deep_167",
+    "text": "What role does faith play in your life, spiritual or otherwise?"
+  },
+  {
+    "id": "deep_168",
+    "text": "How do you want to be an example to others?"
+  },
+  {
+    "id": "deep_169",
+    "text": "What's worth protecting about your inner world?"
+  },
+  {
+    "id": "deep_170",
+    "text": "How do you navigate the tension between wanting and accepting?"
+  },
+  {
+    "id": "deep_171",
+    "text": "What does it mean to be kind to yourself?"
+  },
+  {
+    "id": "deep_172",
+    "text": "How do you find your way back when you feel lost?"
+  },
+  {
+    "id": "deep_173",
+    "text": "What's a lesson you wish you'd learned earlier?"
+  },
+  {
+    "id": "deep_174",
+    "text": "How do you want your life to matter?"
+  },
+  {
+    "id": "deep_175",
+    "text": "What does the ultimate freedom look like to you?"
+  }
+]
