@@ -10,16 +10,16 @@ interface CategoryFilterProps {
   customQuestionsExist: boolean;
 }
 
-const categoryColors: Record<Category, string> = {
-  general: "bg-amber-500",
-  funny: "bg-yellow-500",
-  "would-you-rather": "bg-sky-500",
-  deep: "bg-indigo-500",
-  spicy: "bg-orange-500",
-  nostalgia: "bg-teal-500",
-  intimate: "bg-rose-500",
-  nsfw: "bg-purple-500",
-  custom: "bg-stone-500",
+const categoryConfig: Record<Category, { icon: string; gradient: string }> = {
+  general: { icon: "💡", gradient: "from-amber-400 to-yellow-500" },
+  funny: { icon: "😄", gradient: "from-yellow-400 to-yellow-500" },
+  "would-you-rather": { icon: "🤔", gradient: "from-blue-400 to-cyan-500" },
+  deep: { icon: "🌊", gradient: "from-indigo-400 to-purple-500" },
+  spicy: { icon: "🔥", gradient: "from-orange-400 to-red-500" },
+  nostalgia: { icon: "🎬", gradient: "from-teal-400 to-cyan-500" },
+  intimate: { icon: "💕", gradient: "from-rose-400 to-pink-500" },
+  nsfw: { icon: "⚡", gradient: "from-purple-400 to-pink-500" },
+  custom: { icon: "✨", gradient: "from-slate-400 to-slate-500" },
 };
 
 export function CategoryFilter({
@@ -56,13 +56,13 @@ export function CategoryFilter({
   const isAllActive = activeCategories === "all";
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-3">
       <button
         onClick={handleAllClick}
-        className={`px-4 py-2 rounded-full font-sans font-medium text-sm transition-colors ${
+        className={`px-4 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 ${
           isAllActive
-            ? "bg-stone-500 text-white"
-            : "border border-border text-text-primary hover:bg-track"
+            ? "bg-gradient-to-r from-slate-700 to-slate-900 dark:from-slate-400 dark:to-slate-500 text-white shadow-lg"
+            : "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
         }`}
       >
         All
@@ -71,19 +71,20 @@ export function CategoryFilter({
       {allCategories.map((category) => {
         const isActive =
           activeCategories !== "all" && activeCategories.includes(category);
-        const color = categoryColors[category];
+        const config = categoryConfig[category];
 
         return (
           <button
             key={category}
             onClick={() => handleCategoryClick(category)}
-            className={`px-4 py-2 rounded-full font-sans font-medium text-sm transition-colors capitalize ${
+            className={`px-4 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 flex items-center gap-1.5 capitalize ${
               isActive
-                ? `${color} text-white`
-                : "border border-border text-text-primary hover:bg-track"
+                ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
+                : "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
             }`}
           >
-            {category}
+            <span>{config.icon}</span>
+            <span className="hidden xs:inline">{category}</span>
           </button>
         );
       })}
