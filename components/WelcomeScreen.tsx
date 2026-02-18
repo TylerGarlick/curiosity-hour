@@ -82,8 +82,8 @@ export function WelcomeScreen({ onStartGame }: WelcomeScreenProps) {
                   className="w-full px-4 py-3 sm:py-2 border border-border rounded-lg bg-bg text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent text-base"
                 />
               ))}
+            </div>
           </div>
-        </div>
 
         {/* Relationship Mode */}
         <div className="mb-6 sm:mb-8">
@@ -105,6 +105,41 @@ export function WelcomeScreen({ onStartGame }: WelcomeScreenProps) {
               </button>
             ))}
           </div>
+
+          {/* Relationship Mode */}
+          <div>
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-4">
+              Your relationship
+            </label>
+            <div className="flex gap-3">
+              {(["friend", "partner"] as const).map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setMode(m)}
+                  className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all duration-200 capitalize text-base ${
+                    mode === m
+                      ? "bg-gradient-to-r from-blue-400 to-cyan-500 text-white shadow-lg"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700"
+                  }`}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Start Button */}
+          <button
+            onClick={handleStart}
+            disabled={!allNamesFilled}
+            className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-200 ${
+              allNamesFilled
+                ? "bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer"
+                : "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed"
+            }`}
+          >
+            {allNamesFilled ? "Start Exploring" : "Fill in names to continue"}
+          </button>
         </div>
 
         {/* Start Button */}
@@ -120,6 +155,22 @@ export function WelcomeScreen({ onStartGame }: WelcomeScreenProps) {
           Start Game
         </button>
       </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.6s ease-out;
+        }
+      `}</style>
     </div>
   );
 }

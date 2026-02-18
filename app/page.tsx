@@ -233,10 +233,10 @@ export default function Home() {
               onSelectGame={handleSelectGame}
               onNewGame={handleNewGame}
             />
+            <ThemeSwitcher />
           </div>
-          <ThemeSwitcher />
         </div>
-      </div>
+      </header>
 
       {/* Main Content */}
       <div className="flex-1 max-w-2xl mx-auto w-full px-3 sm:px-4 py-6 sm:py-8">
@@ -280,16 +280,16 @@ export default function Home() {
             onClick={() => setCustomQuestionsOpen(true)}
             className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-sm active:bg-border"
           >
-            My Questions
+            📝 My Questions
           </button>
           <button
             onClick={() => setResetDialogOpen(true)}
             className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-sm active:bg-border"
           >
-            Reset
+            🔄 Reset Progress
           </button>
         </div>
-      </div>
+      </main>
 
       {/* Dialogs */}
       <CustomQuestions

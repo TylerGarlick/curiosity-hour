@@ -49,7 +49,7 @@ export function GameSwitcher({
         <div className="absolute top-full mt-2 left-0 right-0 sm:left-auto sm:right-auto sm:w-48 bg-surface border border-border rounded-lg shadow-lg z-50">
           <div className="p-2">
             {games.length === 0 ? (
-              <p className="text-text-secondary text-sm px-3 py-2">No games yet</p>
+              <p className="text-slate-500 dark:text-slate-400 text-sm px-3 py-2">No games yet</p>
             ) : (
               games.map((game) => (
                 <button
@@ -58,15 +58,15 @@ export function GameSwitcher({
                     onSelectGame(game.id);
                     setIsOpen(false);
                   }}
-                  className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                  className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     game.id === activeGameId
-                      ? "bg-accent text-white"
-                      : "text-text-primary hover:bg-track"
+                      ? "bg-gradient-to-r from-amber-400 to-orange-500 text-white"
+                      : "text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800"
                   }`}
                 >
                   <div className="flex items-center gap-2">
                     {game.id === activeGameId && <span>✓</span>}
-                    {game.playerNames.join(" & ")}
+                    <span className="truncate">{game.playerNames.join(" & ")}</span>
                   </div>
                 </button>
               ))
@@ -76,7 +76,7 @@ export function GameSwitcher({
                 onNewGame();
                 setIsOpen(false);
               }}
-              className="w-full text-left px-3 py-2 rounded text-sm text-text-primary hover:bg-track transition-colors border-t border-border mt-2 pt-2"
+              className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border-t border-slate-200 dark:border-slate-800 mt-2 pt-2"
             >
               + New Game
             </button>
