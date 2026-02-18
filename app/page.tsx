@@ -222,17 +222,11 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">💬</span>
-            <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
-              Curiosity Hour
-            </h1>
-          </div>
-          <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-bg flex flex-col">
+      {/* Top Bar */}
+      <div className="bg-surface border-b border-border sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-2">
+          <div className="flex-1 min-w-0">
             <GameSwitcher
               games={appState.games}
               activeGameId={appState.activeGameId}
@@ -245,18 +239,18 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-        {/* Progress Bar */}
-        <div>
+      <div className="flex-1 max-w-2xl mx-auto w-full px-3 sm:px-4 py-6 sm:py-8">
+        {/* Progress */}
+        <div className="mb-6 sm:mb-8">
           <ProgressBar
             answered={activeGame.answeredIds.length}
             total={availableQuestions.length + activeGame.answeredIds.length}
           />
         </div>
 
-        {/* Category Filter - Scrollable */}
-        <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 pb-2">
-          <div className="flex gap-2 sm:flex-wrap sm:gap-3">
+        {/* Category Filter */}
+        <div className="mb-6 sm:mb-8 overflow-x-auto pb-2 -mx-3 sm:-mx-4 px-3 sm:px-4">
+          <div className="inline-flex gap-2 min-w-min">
             <CategoryFilter
               activeCategories={activeGame.activeCategories}
               onCategoryChange={handleCategoryChange}
@@ -266,13 +260,13 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Question Card - Main Focus */}
-        <div className="mt-8 mb-8">
+        {/* Question Card */}
+        <div className="mb-6 sm:mb-8">
           <QuestionCard question={currentQuestion || null} />
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-8">
+        <div className="mb-6 sm:mb-8">
           <ActionButtons
             onMarkAnswered={handleMarkAnswered}
             onSkip={handleSkip}
@@ -281,16 +275,16 @@ export default function Home() {
         </div>
 
         {/* Bottom Actions */}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
           <button
             onClick={() => setCustomQuestionsOpen(true)}
-            className="px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-lg font-semibold transition-all text-sm"
+            className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-sm active:bg-border"
           >
             📝 My Questions
           </button>
           <button
             onClick={() => setResetDialogOpen(true)}
-            className="px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-lg font-semibold transition-all text-sm"
+            className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-sm active:bg-border"
           >
             🔄 Reset Progress
           </button>
