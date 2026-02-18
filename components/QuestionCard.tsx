@@ -35,39 +35,16 @@ export function QuestionCard({ question }: QuestionCardProps) {
   const config = categoryConfig[question.category] || categoryConfig.custom;
 
   return (
-    <div className="relative group">
-      {/* Glow effect */}
-      <div className={`absolute inset-0 bg-gradient-to-r ${config.gradient} rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-xl`} />
-
-      {/* Main card */}
-      <div className={`relative bg-gradient-to-br ${config.gradient} rounded-2xl shadow-2xl p-8 sm:p-12 min-h-80 sm:min-h-96 flex flex-col justify-between overflow-hidden border border-white/20`}>
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-40 h-40 bg-white rounded-full blur-3xl" />
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10">
-          {/* Category badge */}
-          <div className="flex items-center gap-2 mb-6">
-            <span className="text-3xl">{config.icon}</span>
-            <span className="text-xs font-bold text-white/80 uppercase tracking-widest">
-              {question.category}
-            </span>
-          </div>
-
-          {/* Question text */}
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
-            {question.text}
-          </h2>
-        </div>
-
-        {/* Bottom accent */}
-        <div className="relative z-10 flex items-center gap-2 mt-6 pt-6 border-t border-white/20">
-          <div className="w-2 h-2 bg-white rounded-full" />
-          <p className="text-xs text-white/70 font-light">Take your time and be honest</p>
-        </div>
+    <div className="bg-surface rounded-2xl sm:rounded-3xl border border-border p-4 sm:p-8 min-h-64 flex flex-col justify-between">
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4 mb-6">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-text-primary flex-1 leading-tight">
+          {question.text}
+        </h2>
+        <span
+          className={`${categoryColor} text-white px-3 py-1 rounded-full text-xs font-sans font-semibold whitespace-nowrap capitalize flex-shrink-0`}
+        >
+          {question.category}
+        </span>
       </div>
     </div>
   );
