@@ -10,17 +10,17 @@ export function ProgressBar({ answered, total }: ProgressBarProps) {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-sans font-medium text-text-primary">
-          Progress
+      <div className="flex justify-between items-center mb-3">
+        <span className="text-sm font-semibold text-slate-900 dark:text-white">
+          Questions Explored
         </span>
-        <span className="text-sm font-sans text-text-secondary">
-          {answered} of {total}
+        <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+          <span className="text-lg font-bold text-amber-500">{answered}</span> / {total}
         </span>
       </div>
-      <div className="w-full bg-track rounded-full h-3 overflow-hidden">
+      <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden shadow-sm">
         <div
-          className="bg-accent h-full transition-all duration-300 rounded-full"
+          className="bg-gradient-to-r from-amber-400 to-orange-500 h-full transition-all duration-500 rounded-full shadow-lg"
           style={{ width: `${percentage}%` }}
         />
       </div>
