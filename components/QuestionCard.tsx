@@ -30,13 +30,13 @@ export function QuestionCard({ question }: QuestionCardProps) {
   const categoryColor = categoryColors[question.category] || "bg-stone-500";
 
   return (
-    <div className="bg-surface rounded-3xl border border-border p-8 min-h-64 flex flex-col justify-between">
-      <div className="flex items-start justify-between gap-4 mb-6">
-        <h2 className="text-2xl md:text-3xl font-serif font-bold text-text-primary flex-1 leading-tight">
+    <div className="bg-surface rounded-2xl sm:rounded-3xl border border-border p-4 sm:p-8 min-h-64 flex flex-col justify-between">
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4 mb-6">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-text-primary flex-1 leading-tight">
           {question.text}
         </h2>
         <span
-          className={`${categoryColor} text-white px-3 py-1 rounded-full text-xs font-sans font-semibold whitespace-nowrap capitalize`}
+          className={`${categoryColor} text-white px-3 py-1 rounded-full text-xs font-sans font-semibold whitespace-nowrap capitalize flex-shrink-0`}
         >
           {question.category}
         </span>

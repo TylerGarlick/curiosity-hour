@@ -32,18 +32,18 @@ export function WelcomeScreen({ onStartGame }: WelcomeScreenProps) {
   };
 
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-surface rounded-3xl shadow-lg border border-border p-8">
+    <div className="min-h-screen bg-bg flex items-center justify-center p-3 sm:p-4">
+      <div className="w-full max-w-md bg-surface rounded-2xl sm:rounded-3xl shadow-lg border border-border p-6 sm:p-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-serif font-bold text-text-primary mb-2">
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-text-primary mb-2">
             Curiosity Hour
           </h1>
-          <p className="text-text-secondary font-sans">Get to know each other better</p>
+          <p className="text-sm sm:text-base text-text-secondary font-sans">Get to know each other better</p>
         </div>
 
         {/* Player Count Selector */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <label className="block text-sm font-semibold text-text-primary mb-3">
             How many players?
           </label>
@@ -52,7 +52,7 @@ export function WelcomeScreen({ onStartGame }: WelcomeScreenProps) {
               <button
                 key={count}
                 onClick={() => handlePlayerCountChange(count)}
-                className={`flex-1 py-2 px-3 rounded-lg font-sans font-medium transition-colors ${
+                className={`flex-1 py-2 px-3 rounded-lg font-sans font-medium transition-colors text-sm active:scale-95 ${
                   playerCount === count
                     ? "bg-accent text-white"
                     : "bg-track text-text-primary border border-border hover:bg-border"
@@ -65,7 +65,7 @@ export function WelcomeScreen({ onStartGame }: WelcomeScreenProps) {
         </div>
 
         {/* Name Inputs */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <label className="block text-sm font-semibold text-text-primary mb-3">
             Player Names
           </label>
@@ -79,14 +79,14 @@ export function WelcomeScreen({ onStartGame }: WelcomeScreenProps) {
                   value={names[i] || ""}
                   onChange={(e) => handleNameChange(i, e.target.value)}
                   placeholder={`Player ${i + 1}`}
-                  className="w-full px-4 py-2 border border-border rounded-lg bg-bg text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent"
+                  className="w-full px-4 py-3 sm:py-2 border border-border rounded-lg bg-bg text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent text-base"
                 />
               ))}
           </div>
         </div>
 
         {/* Relationship Mode */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <label className="block text-sm font-semibold text-text-primary mb-3">
             Relationship
           </label>
@@ -95,7 +95,7 @@ export function WelcomeScreen({ onStartGame }: WelcomeScreenProps) {
               <button
                 key={m}
                 onClick={() => setMode(m)}
-                className={`flex-1 py-2 px-4 rounded-lg font-sans font-medium transition-colors capitalize ${
+                className={`flex-1 py-2 px-4 rounded-lg font-sans font-medium transition-colors capitalize text-sm active:scale-95 ${
                   mode === m
                     ? "bg-accent text-white"
                     : "bg-track text-text-primary border border-border hover:bg-border"
@@ -111,7 +111,7 @@ export function WelcomeScreen({ onStartGame }: WelcomeScreenProps) {
         <button
           onClick={handleStart}
           disabled={!allNamesFilled}
-          className={`w-full py-3 rounded-lg font-sans font-semibold transition-colors ${
+          className={`w-full py-3 rounded-lg font-sans font-semibold transition-colors text-base active:scale-95 ${
             allNamesFilled
               ? "bg-accent hover:bg-accent-hover text-white cursor-pointer"
               : "bg-track text-text-secondary cursor-not-allowed"
