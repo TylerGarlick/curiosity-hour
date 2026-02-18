@@ -39,14 +39,14 @@ export function GameSwitcher({
     <div ref={ref} className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-2 bg-surface border border-border rounded-lg text-text-primary hover:bg-track transition-colors font-sans flex items-center gap-2"
+        className="px-3 sm:px-4 py-2 bg-surface border border-border rounded-lg text-text-primary hover:bg-track transition-colors font-sans flex items-center gap-2 text-sm sm:text-base truncate"
       >
-        {gameLabel}
-        <span className="text-sm">▼</span>
+        <span className="truncate">{gameLabel}</span>
+        <span className="text-xs sm:text-sm flex-shrink-0">▼</span>
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 left-0 w-48 bg-surface border border-border rounded-lg shadow-lg z-50">
+        <div className="absolute top-full mt-2 left-0 right-0 sm:left-auto sm:right-auto sm:w-48 bg-surface border border-border rounded-lg shadow-lg z-50">
           <div className="p-2">
             {games.length === 0 ? (
               <p className="text-text-secondary text-sm px-3 py-2">No games yet</p>
