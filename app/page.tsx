@@ -222,49 +222,57 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-bg">
-      {/* Top Bar */}
-      <div className="bg-surface border-b border-border sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">💬</span>
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
+              Curiosity Hour
+            </h1>
+          </div>
+          <div className="flex items-center gap-3">
             <GameSwitcher
               games={appState.games}
               activeGameId={appState.activeGameId}
               onSelectGame={handleSelectGame}
               onNewGame={handleNewGame}
             />
+            <ThemeSwitcher />
           </div>
-          <ThemeSwitcher />
         </div>
-      </div>
+      </header>
 
       {/* Main Content */}
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        {/* Progress */}
-        <div className="mb-8">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+        {/* Progress Bar */}
+        <div>
           <ProgressBar
             answered={activeGame.answeredIds.length}
             total={availableQuestions.length + activeGame.answeredIds.length}
           />
         </div>
 
-        {/* Category Filter */}
-        <div className="mb-8 overflow-x-auto pb-2">
-          <CategoryFilter
-            activeCategories={activeGame.activeCategories}
-            onCategoryChange={handleCategoryChange}
-            relationshipMode={activeGame.relationshipMode}
-            customQuestionsExist={appState.customQuestions.length > 0}
-          />
+        {/* Category Filter - Scrollable */}
+        <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 pb-2">
+          <div className="flex gap-2 sm:flex-wrap sm:gap-3">
+            <CategoryFilter
+              activeCategories={activeGame.activeCategories}
+              onCategoryChange={handleCategoryChange}
+              relationshipMode={activeGame.relationshipMode}
+              customQuestionsExist={appState.customQuestions.length > 0}
+            />
+          </div>
         </div>
 
-        {/* Question Card */}
-        <div className="mb-8">
+        {/* Question Card - Main Focus */}
+        <div className="mt-8 mb-8">
           <QuestionCard question={currentQuestion || null} />
         </div>
 
         {/* Action Buttons */}
-        <div className="mb-8">
+        <div className="mt-8">
           <ActionButtons
             onMarkAnswered={handleMarkAnswered}
             onSkip={handleSkip}
@@ -273,21 +281,21 @@ export default function Home() {
         </div>
 
         {/* Bottom Actions */}
-        <div className="flex gap-3 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4 border-t border-slate-200 dark:border-slate-800">
           <button
             onClick={() => setCustomQuestionsOpen(true)}
-            className="px-4 py-2 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-sm"
+            className="px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-lg font-semibold transition-all text-sm"
           >
-            My Questions
+            📝 My Questions
           </button>
           <button
             onClick={() => setResetDialogOpen(true)}
-            className="px-4 py-2 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-sm"
+            className="px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-lg font-semibold transition-all text-sm"
           >
-            Reset
+            🔄 Reset Progress
           </button>
         </div>
-      </div>
+      </main>
 
       {/* Dialogs */}
       <CustomQuestions
