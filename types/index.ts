@@ -23,6 +23,7 @@ export interface GameSession {
   playerNames: string[];
   relationshipMode: RelationshipMode;
   answeredIds: string[];
+  skippedIds: string[];
   currentId: string | null;
   activeCategories: Category[] | "all";
   createdAt: number;

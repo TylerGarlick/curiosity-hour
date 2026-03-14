@@ -13,7 +13,7 @@ import { CustomQuestions } from "@/components/CustomQuestions";
 import { ResetDialog } from "@/components/ResetDialog";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { getAllQuestions } from "@/lib/questions";
-import { getAvailableQuestions, pickRandomQuestion } from "@/lib/game";
+import { getAvailableQuestions, getAvailableQuestionsSorted, pickRandomQuestion } from "@/lib/game";
 
 const EMPTY_STATE: AppState = {
   activeGameId: null,
@@ -52,6 +52,7 @@ export default function Home() {
             playerNames: names,
             relationshipMode: mode,
             answeredIds: [],
+            skippedIds: [],
             currentId: null,
             activeCategories: "all",
             createdAt: Date.now(),
@@ -84,10 +85,10 @@ export default function Home() {
     const updatedGame = {
       ...activeGame,
       answeredIds: [...activeGame.answeredIds, currentQuestion.id],
-      globalAnsweredIds: [...appState.globalAnsweredIds, currentQuestion.id],
     };
 
-    const available = getAvailableQuestions(updatedGame, allQuestions);
+    // Use sorted to prefer non-skipped questions
+    const available = getAvailableQuestionsSorted(updatedGame, allQuestions);
     const nextQuestionId = pickRandomQuestion(available);
 
     const updatedGames = appState.games.map((g) =>
@@ -109,7 +110,14 @@ export default function Home() {
   const handleSkip = () => {
     if (!currentQuestion || !activeGame) return;
 
-    const available = getAvailableQuestions(activeGame, allQuestions).filter(
+    // Add current question to skipped list
+    const updatedGame = {
+      ...activeGame,
+      skippedIds: [...activeGame.skippedIds, currentQuestion.id],
+    };
+
+    // Use sorted to prefer non-skipped questions
+    const available = getAvailableQuestionsSorted(updatedGame, allQuestions).filter(
       (q) => q.id !== currentQuestion.id
     );
     const nextQuestionId = pickRandomQuestion(available);
@@ -117,7 +125,7 @@ export default function Home() {
     const updatedGames = appState.games.map((g) =>
       g.id === activeGame.id
         ? {
-            ...g,
+            ...updatedGame,
             currentId: nextQuestionId,
           }
         : g
@@ -201,14 +209,15 @@ export default function Home() {
   const handleResetProgress = () => {
     if (!activeGame) return;
 
-    const updatedGame = {
+    const updatedGame: GameSession = {
       ...activeGame,
       answeredIds: [],
+      skippedIds: [],
       currentId: null,
     };
 
     const available = getAvailableQuestions(updatedGame, allQuestions);
-    const firstQuestionId = available.length > 0 ? pickRandomQuestion(available) : null;
+    const firstQuestionId = pickRandomQuestion(available);
     updatedGame.currentId = firstQuestionId;
 
     const updatedGames = appState.games.map((g) =>
@@ -223,70 +232,58 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-bg flex flex-col">
-      {/* Top Bar */}
-      <div className="bg-surface border-b border-border sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-2">
-          <div className="flex-1 min-w-0">
-            <GameSwitcher
-              games={appState.games}
-              activeGameId={appState.activeGameId}
-              onSelectGame={handleSelectGame}
-              onNewGame={handleNewGame}
-            />
-            <ThemeSwitcher />
-          </div>
+      {/* Simple Header */}
+      <div className="bg-surface border-b border-border px-4 py-3 flex items-center justify-between">
+        <h1 className="text-lg font-semibold text-text-primary">Curiosity Hour</h1>
+        <div className="flex gap-2">
+          <GameSwitcher
+            games={appState.games}
+            activeGameId={appState.activeGameId}
+            onSelectGame={handleSelectGame}
+            onNewGame={handleNewGame}
+          />
         </div>
-      </header>
+      </div>
 
       {/* Main Content */}
-      <div className="flex-1 max-w-2xl mx-auto w-full px-3 sm:px-4 py-6 sm:py-8">
+      <main className="flex-1 max-w-lg mx-auto w-full p-4 space-y-6">
         {/* Progress */}
-        <div className="mb-6 sm:mb-8">
-          <ProgressBar
-            answered={activeGame.answeredIds.length}
-            total={availableQuestions.length + activeGame.answeredIds.length}
-          />
-        </div>
+        <ProgressBar
+          answered={activeGame.answeredIds.length}
+          total={availableQuestions.length + activeGame.answeredIds.length}
+        />
 
         {/* Category Filter */}
-        <div className="mb-6 sm:mb-8 overflow-x-auto pb-2 -mx-3 sm:-mx-4 px-3 sm:px-4">
-          <div className="inline-flex gap-2 min-w-min">
-            <CategoryFilter
-              activeCategories={activeGame.activeCategories}
-              onCategoryChange={handleCategoryChange}
-              relationshipMode={activeGame.relationshipMode}
-              customQuestionsExist={appState.customQuestions.length > 0}
-            />
-          </div>
-        </div>
+        <CategoryFilter
+          activeCategories={activeGame.activeCategories}
+          onCategoryChange={handleCategoryChange}
+          relationshipMode={activeGame.relationshipMode}
+          customQuestionsExist={appState.customQuestions.length > 0}
+        />
 
         {/* Question Card */}
-        <div className="mb-6 sm:mb-8">
-          <QuestionCard question={currentQuestion || null} />
-        </div>
+        <QuestionCard question={currentQuestion || null} />
 
         {/* Action Buttons */}
-        <div className="mb-6 sm:mb-8">
-          <ActionButtons
-            onMarkAnswered={handleMarkAnswered}
-            onSkip={handleSkip}
-            disabled={availableQuestions.length === 0}
-          />
-        </div>
+        <ActionButtons
+          onMarkAnswered={handleMarkAnswered}
+          onSkip={handleSkip}
+          disabled={availableQuestions.length === 0}
+        />
 
         {/* Bottom Actions */}
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
+        <div className="flex gap-2 pt-4 border-t border-border">
           <button
             onClick={() => setCustomQuestionsOpen(true)}
-            className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-sm active:bg-border"
+            className="flex-1 py-3 bg-track hover:bg-border text-text-primary rounded-lg text-sm font-medium"
           >
-            📝 My Questions
+            My Questions
           </button>
           <button
             onClick={() => setResetDialogOpen(true)}
-            className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-sm active:bg-border"
+            className="flex-1 py-3 bg-track hover:bg-border text-text-primary rounded-lg text-sm font-medium"
           >
-            🔄 Reset Progress
+            Reset
           </button>
         </div>
       </main>
