@@ -23,6 +23,24 @@ export function getAvailableQuestions(
   return available;
 }
 
+/**
+ * Get available questions sorted to prefer non-skipped questions.
+ * Returns unanswered questions with skipped ones at the end.
+ */
+export function getAvailableQuestionsSorted(
+  session: GameSession,
+  allQuestions: Question[]
+): Question[] {
+  const available = getAvailableQuestions(session, allQuestions);
+
+  // Split into non-skipped and skipped
+  const nonSkipped = available.filter((q) => !session.skippedIds.includes(q.id));
+  const skipped = available.filter((q) => session.skippedIds.includes(q.id));
+
+  // Return non-skipped first, then skipped
+  return [...nonSkipped, ...skipped];
+}
+
 export function pickRandomQuestion(available: Question[]): string | null {
   if (available.length === 0) return null;
   const index = Math.floor(Math.random() * available.length);
