@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { AppState, GameSession, Question, RelationshipMode, Category } from "@/types";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useProStatus } from "@/hooks/useProStatus";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { GameSwitcher } from "@/components/GameSwitcher";
 import { CategoryFilter } from "@/components/CategoryFilter";
@@ -12,8 +13,14 @@ import { ActionButtons } from "@/components/ActionButtons";
 import { CustomQuestions } from "@/components/CustomQuestions";
 import { ResetDialog } from "@/components/ResetDialog";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { CreateRoomModal } from "@/components/CreateRoomModal";
+import { JoinRoomModal } from "@/components/JoinRoomModal";
+import { SharedRoomScreen } from "@/components/SharedRoomScreen";
+import { MiniAdBanner } from "@/components/AdBanner";
+import { ProUpgradeModal, ProButton } from "@/components/ProUpgradeModal";
 import { getAllQuestions } from "@/lib/questions";
 import { getAvailableQuestions, getAvailableQuestionsSorted, pickRandomQuestion } from "@/lib/game";
+import { Room } from "@/lib/graphql/client";
 
 const EMPTY_STATE: AppState = {
   activeGameId: null,
@@ -28,11 +35,43 @@ export default function Home() {
   const [customQuestionsOpen, setCustomQuestionsOpen] = useState(false);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
 
+  // Pro/ monetization state
+  const { isPro, upgradeToPro, isLoading: isProLoading } = useProStatus();
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+
+  // Shared room state
+  const [createRoomOpen, setCreateRoomOpen] = useState(false);
+  const [joinRoomOpen, setJoinRoomOpen] = useState(false);
+  const [sharedRoom, setSharedRoom] = useState<{ code: string; playerId: string; room: Room } | null>(null);
+
+  // Restore shared room from localStorage on mount
+  useEffect(() => {
+    const savedRoom = localStorage.getItem("curiosity_hour_shared_room");
+    if (savedRoom) {
+      try {
+        const parsed = JSON.parse(savedRoom);
+        setSharedRoom(parsed);
+      } catch (e) {
+        localStorage.removeItem("curiosity_hour_shared_room");
+      }
+    }
+  }, []);
+
+  // Save shared room to localStorage when it changes
+  useEffect(() => {
+    if (sharedRoom) {
+      localStorage.setItem("curiosity_hour_shared_room", JSON.stringify(sharedRoom));
+    } else {
+      localStorage.removeItem("curiosity_hour_shared_room");
+    }
+  }, [sharedRoom]);
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  // Show loading until we've checked Pro status
+  if (!mounted || isProLoading) return null;
 
   const hasGames = appState.games.length > 0;
   const activeGame = appState.games.find((g) => g.id === appState.activeGameId);
@@ -42,11 +81,23 @@ export default function Home() {
     : [];
   const currentQuestion = allQuestions.find((q) => q.id === activeGame?.currentId);
 
+  // Shared room mode
+  if (sharedRoom) {
+    return (
+      <SharedRoomScreen
+        code={sharedRoom.code}
+        playerId={sharedRoom.playerId}
+        onBack={() => setSharedRoom(null)}
+      />
+    );
+  }
+
   // Welcome screen
   if (!hasGames || !activeGame) {
     return (
-      <WelcomeScreen
-        onStartGame={(names, mode) => {
+      <>
+        <WelcomeScreen
+          onStartGame={(names, mode) => {
           const newGame: GameSession = {
             id: `game_${Date.now()}`,
             playerNames: names,
@@ -74,7 +125,42 @@ export default function Home() {
 
           setAppState(updatedState);
         }}
-      />
+        onCreateRoom={() => {
+            setCreateRoomOpen(true);
+          }}
+          onJoinRoom={() => {
+            setJoinRoomOpen(true);
+          }}
+        />
+
+        <CreateRoomModal
+          isOpen={createRoomOpen}
+          onClose={() => setCreateRoomOpen(false)}
+          onRoomCreated={(code, playerId, room) => {
+            setCreateRoomOpen(false);
+            setSharedRoom({ code, playerId, room });
+          }}
+          onSwitchToJoin={() => {
+            setCreateRoomOpen(false);
+            setJoinRoomOpen(true);
+          }}
+          isPro={isPro}
+          onUpgrade={() => setUpgradeModalOpen(true)}
+        />
+
+        <JoinRoomModal
+          isOpen={joinRoomOpen}
+          onClose={() => setJoinRoomOpen(false)}
+          onRoomJoined={(code, playerId, room) => {
+            setJoinRoomOpen(false);
+            setSharedRoom({ code, playerId, room });
+          }}
+          onSwitchToCreate={() => {
+            setJoinRoomOpen(false);
+            setCreateRoomOpen(true);
+          }}
+        />
+      </>
     );
   }
 
@@ -232,10 +318,29 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-bg flex flex-col">
-      {/* Simple Header */}
-      <div className="bg-surface border-b border-border px-4 py-3 flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-text-primary">Curiosity Hour</h1>
-        <div className="flex gap-2">
+      {/* Simple Header - compact for mobile */}
+      <header className="bg-surface border-b border-border px-4 py-2 flex items-center justify-between sticky top-0 z-10">
+        <h1 className="text-base font-semibold text-text-primary">Curiosity Hour</h1>
+        <div className="flex items-center gap-2">
+          {!isPro && (
+            <button
+              onClick={() => setUpgradeModalOpen(true)}
+              className="inline-flex items-center gap-1 bg-accent/10 text-accent px-2 py-1 rounded-lg text-xs font-medium hover:bg-accent/20 transition-colors"
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+              </svg>
+              Pro
+            </button>
+          )}
+          {isPro && (
+            <span className="inline-flex items-center gap-1 text-accent text-xs font-medium">
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+              </svg>
+              Pro
+            </span>
+          )}
           <GameSwitcher
             games={appState.games}
             activeGameId={appState.activeGameId}
@@ -243,50 +348,82 @@ export default function Home() {
             onNewGame={handleNewGame}
           />
         </div>
-      </div>
+      </header>
 
-      {/* Main Content */}
-      <main className="flex-1 max-w-lg mx-auto w-full p-4 space-y-6">
-        {/* Progress */}
-        <ProgressBar
-          answered={activeGame.answeredIds.length}
-          total={availableQuestions.length + activeGame.answeredIds.length}
-        />
+      {/* Main Content - mobile-first layout */}
+      <main className="flex-1 flex flex-col w-full">
+        {/* Progress indicator - minimal on mobile */}
+        <div className="px-4 pt-3">
+          <div className="flex items-center justify-between text-xs text-text-secondary mb-1">
+            <span>{activeGame.answeredIds.length} answered</span>
+            <span>{availableQuestions.length} remaining</span>
+          </div>
+          <div className="h-1.5 bg-track rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-accent transition-all duration-300"
+              style={{ 
+                width: `${availableQuestions.length + activeGame.answeredIds.length > 0 
+                  ? (activeGame.answeredIds.length / (availableQuestions.length + activeGame.answeredIds.length)) * 100 
+                  : 0}%` 
+              }}
+            />
+          </div>
+        </div>
 
-        {/* Category Filter */}
-        <CategoryFilter
-          activeCategories={activeGame.activeCategories}
-          onCategoryChange={handleCategoryChange}
-          relationshipMode={activeGame.relationshipMode}
-          customQuestionsExist={appState.customQuestions.length > 0}
-        />
+        {/* Question Card - takes most of the screen on mobile */}
+        <div className="flex-1 flex items-center justify-center p-4">
+          <QuestionCard question={currentQuestion || null} />
+        </div>
 
-        {/* Question Card */}
-        <QuestionCard question={currentQuestion || null} />
+        {/* Action Buttons - bottom anchored, thumb-friendly */}
+        <div className="p-4 pb-safe bg-surface border-t border-border space-y-3">
+          <ActionButtons
+            onMarkAnswered={handleMarkAnswered}
+            onSkip={handleSkip}
+            disabled={availableQuestions.length === 0}
+          />
 
-        {/* Action Buttons */}
-        <ActionButtons
-          onMarkAnswered={handleMarkAnswered}
-          onSkip={handleSkip}
-          disabled={availableQuestions.length === 0}
-        />
+          {/* Secondary actions - subtle on mobile */}
+          <div className="flex items-center justify-between text-xs">
+            <button
+              onClick={() => setCustomQuestionsOpen(true)}
+              className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
+            >
+              My Questions
+            </button>
+            
+            {/* Category filter trigger - mobile optimized */}
+            <details className="relative">
+              <summary className="list-none cursor-pointer text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
+                Filter
+              </summary>
+              <div className="absolute bottom-full right-0 mb-2 bg-surface border border-border rounded-xl shadow-lg p-3 min-w-48">
+                <CategoryFilter
+                  activeCategories={activeGame.activeCategories}
+                  onCategoryChange={handleCategoryChange}
+                  relationshipMode={activeGame.relationshipMode}
+                  customQuestionsExist={appState.customQuestions.length > 0}
+                />
+              </div>
+            </details>
 
-        {/* Bottom Actions */}
-        <div className="flex gap-2 pt-4 border-t border-border">
-          <button
-            onClick={() => setCustomQuestionsOpen(true)}
-            className="flex-1 py-3 bg-track hover:bg-border text-text-primary rounded-lg text-sm font-medium"
-          >
-            My Questions
-          </button>
-          <button
-            onClick={() => setResetDialogOpen(true)}
-            className="flex-1 py-3 bg-track hover:bg-border text-text-primary rounded-lg text-sm font-medium"
-          >
-            Reset
-          </button>
+            <button
+              onClick={() => setResetDialogOpen(true)}
+              className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
+            >
+              Reset
+            </button>
+          </div>
         </div>
       </main>
+
+      {/* Ad banner for free users */}
+      {!isPro && (
+        <MiniAdBanner onUpgrade={() => setUpgradeModalOpen(true)} />
+      )}
 
       {/* Dialogs */}
       <CustomQuestions
@@ -303,6 +440,12 @@ export default function Home() {
         onNewGame={handleNewGame}
         isOpen={resetDialogOpen}
         onClose={() => setResetDialogOpen(false)}
+      />
+
+      <ProUpgradeModal
+        isOpen={upgradeModalOpen}
+        onClose={() => setUpgradeModalOpen(false)}
+        onUpgrade={upgradeToPro}
       />
     </div>
   );

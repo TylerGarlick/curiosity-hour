@@ -1,11 +1,10 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = 'curiosity-hour-v1';
+const CACHE_NAME = 'curiosity-hour-v2';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
+  '/icon-192.svg',
 ];
 
 declare const self: ServiceWorkerGlobalScope;
