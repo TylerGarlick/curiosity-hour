@@ -4,15 +4,17 @@
 
 ## Planned Features
 
-### TTS for Car Use
+## Completed Features
+
+### TTS for Car Use ✅
 - **Priority:** High
 - **Feature:** Text-to-Speech to read questions aloud
 - **Use Case:** Couples playing together in the car
 - **Implementation:** 
-  - Add "Read Aloud" button on question cards
-  - Use browser Speech Synthesis API (no external TTS needed)
-  - Option to auto-read next question
-  - Settings toggle for auto-TTS
+  - Add "Read Aloud" speaker button on question cards ✅
+  - Use browser Speech Synthesis API (no external TTS needed) ✅
+  - Tap to read, tap again to stop
+  - Settings toggle for auto-TTS (TODO)
 
 ## Completed Features
 

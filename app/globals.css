@@ -47,6 +47,7 @@
     background-color: var(--color-bg);
     color: var(--color-text-primary);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-tap-highlight-color: transparent;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -57,4 +58,25 @@
 /* Smooth transitions for theme changes */
 html {
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Mobile-first safe area padding */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0.5rem);
+}
+
+/* Touch optimization - prevents double-tap zoom on buttons */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* Remove tap highlight on mobile */
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent text selection on mobile during tap */
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
 }

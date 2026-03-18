@@ -16,10 +16,10 @@ export function ActionButtons({
       <button
         onClick={onMarkAnswered}
         disabled={disabled}
-        className={`flex-1 py-4 px-6 rounded-xl font-medium transition-all active:scale-95 ${
+        className={`flex-1 py-5 px-6 rounded-2xl font-semibold text-lg transition-all active:scale-95 touch-manipulation ${
           disabled
             ? "bg-track text-text-secondary opacity-50 cursor-not-allowed"
-            : "bg-accent text-white hover:bg-accent-hover cursor-pointer"
+            : "bg-accent text-white hover:bg-accent-hover shadow-lg shadow-accent/25 cursor-pointer"
         }`}
       >
         ✓ Done
@@ -27,13 +27,13 @@ export function ActionButtons({
       <button
         onClick={onSkip}
         disabled={disabled}
-        className={`flex-1 py-4 px-6 rounded-xl font-medium border-2 border-border transition-all active:scale-95 ${
+        className={`flex-1 py-5 px-6 rounded-2xl font-semibold text-lg border-2 transition-all active:scale-95 touch-manipulation ${
           disabled
             ? "bg-transparent text-text-secondary opacity-50 cursor-not-allowed"
-            : "bg-transparent border-border text-text-primary hover:bg-track cursor-pointer"
+            : "bg-surface border-border text-text-primary hover:bg-track cursor-pointer"
         }`}
       >
-        Skip →
+        Skip
       </button>
     </div>
   );
