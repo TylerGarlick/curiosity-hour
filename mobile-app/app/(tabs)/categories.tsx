@@ -42,7 +42,7 @@ export default function CategoriesScreen() {
           >
             <Text style={styles.categoryIcon}>{category.icon}</Text>
             <Text style={styles.categoryName}>{category.label}</Text>
-            <Text style={styles.categoryCount}>30 questions</Text>
+            <Text style={styles.categoryCount}>{category.count} questions</Text>
           </TouchableOpacity>
         ))}
       </View>
