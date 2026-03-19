@@ -106,14 +106,14 @@ export function ResetDialog({
               setAction("none");
               setConfirmed(false);
             }}
-            className="px-4 py-2 bg-track text-text-primary rounded-lg font-sans font-medium hover:bg-border transition-colors"
+            className="px-4 py-3 min-h-11 bg-track text-text-primary rounded-lg font-sans font-medium hover:bg-border transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleConfirm}
             disabled={!confirmed}
-            className={`px-4 py-2 rounded-lg font-sans font-medium transition-colors ${
+            className={`px-4 py-3 min-h-11 rounded-lg font-sans font-medium transition-colors ${
               confirmed
                 ? "bg-rose-500 hover:bg-rose-600 text-white cursor-pointer"
                 : "bg-track text-text-secondary cursor-not-allowed"

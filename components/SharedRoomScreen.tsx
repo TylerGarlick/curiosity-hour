@@ -151,7 +151,7 @@ export function SharedRoomScreen({ code, playerId, onBack }: SharedRoomScreenPro
             </div>
             <button
               onClick={onBack}
-              className="w-full py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90"
+              className="w-full py-3.5 min-h-11 bg-primary text-white rounded-lg font-medium hover:opacity-90"
             >
               Back to Solo Play
             </button>

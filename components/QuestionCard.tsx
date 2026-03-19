@@ -44,7 +44,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
     <div className="bg-surface rounded-3xl border border-border p-6 sm:p-8 w-full max-w-md mx-auto min-h-48 flex flex-col items-center justify-center shadow-sm relative">
       <button
         onClick={handleSpeak}
-        className="absolute top-4 right-4 p-3 rounded-full bg-track hover:bg-border transition-colors touch-manipulation"
+        className="absolute top-4 right-4 p-4 min-w-11 min-h-11 rounded-full bg-track hover:bg-border transition-colors touch-manipulation"
         aria-label={isSpeaking ? "Stop reading" : "Read aloud"}
       >
         {isSpeaking ? (

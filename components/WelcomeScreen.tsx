@@ -55,7 +55,7 @@ export function WelcomeScreen({ onStartGame, onCreateRoom, onJoinRoom, isPro, on
                 <button
                   key={count}
                   onClick={() => handlePlayerCountChange(count)}
-                  className={`flex-1 py-3 rounded-xl font-semibold transition-all active:scale-95 touch-manipulation ${
+                  className={`flex-1 py-3.5 min-h-11 rounded-xl font-semibold transition-all active:scale-95 touch-manipulation ${
                     playerCount === count
                       ? "bg-accent text-white shadow-md shadow-accent/25"
                       : "bg-track text-text-primary border border-border"
@@ -96,7 +96,7 @@ export function WelcomeScreen({ onStartGame, onCreateRoom, onJoinRoom, isPro, on
                 <button
                   key={m}
                   onClick={() => setMode(m)}
-                  className={`flex-1 py-3 rounded-xl font-semibold transition-all active:scale-95 capitalize ${
+                  className={`flex-1 py-3.5 min-h-11 rounded-xl font-semibold transition-all active:scale-95 capitalize ${
                     mode === m
                       ? "bg-accent text-white shadow-md shadow-accent/25"
                       : "bg-track text-text-primary border border-border"
@@ -111,7 +111,7 @@ export function WelcomeScreen({ onStartGame, onCreateRoom, onJoinRoom, isPro, on
           <button
             onClick={handleStart}
             disabled={!allNamesFilled}
-            className={`w-full py-4 rounded-xl font-bold text-lg transition-all active:scale-95 touch-manipulation ${
+            className={`w-full py-4.5 min-h-11 rounded-xl font-bold text-lg transition-all active:scale-95 touch-manipulation ${
               allNamesFilled
                 ? "bg-accent hover:bg-accent-hover text-white shadow-lg shadow-accent/25 cursor-pointer"
                 : "bg-track text-text-secondary cursor-not-allowed"
@@ -126,13 +126,13 @@ export function WelcomeScreen({ onStartGame, onCreateRoom, onJoinRoom, isPro, on
           <div className="flex gap-3">
             <button
               onClick={onCreateRoom}
-              className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25 active:scale-95 touch-manipulation"
+              className="flex-1 py-3.5 px-4 min-h-11 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25 active:scale-95 touch-manipulation"
             >
               Create Room
             </button>
             <button
               onClick={onJoinRoom}
-              className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg shadow-purple-500/25 active:scale-95 touch-manipulation"
+              className="flex-1 py-3.5 px-4 min-h-11 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg shadow-purple-500/25 active:scale-95 touch-manipulation"
             >
               Join Room
             </button>
@@ -147,7 +147,7 @@ export function WelcomeScreen({ onStartGame, onCreateRoom, onJoinRoom, isPro, on
             </p>
             <button
               onClick={onUpgrade}
-              className="w-full py-2 bg-accent text-accent-foreground rounded-lg font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+              className="w-full py-3 min-h-11 bg-accent text-accent-foreground rounded-lg font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />

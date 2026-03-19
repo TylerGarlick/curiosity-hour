@@ -106,7 +106,7 @@ export function ProUpgradeModal({ isOpen, onClose, onUpgrade }: ProUpgradeModalP
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="w-full px-3 py-2 bg-track rounded-lg border border-border text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/50"
+            className="w-full px-3 py-3.5 min-h-11 bg-track rounded-lg border border-border text-sm text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/50"
           />
         </div>
 
@@ -160,7 +160,7 @@ export function ProButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="inline-flex items-center gap-1.5 bg-accent/10 text-accent px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-accent/20 transition-colors"
+      className="inline-flex items-center gap-1.5 bg-accent/10 text-accent px-3 py-2 min-h-11 rounded-lg text-sm font-medium hover:bg-accent/20 transition-colors"
     >
       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />

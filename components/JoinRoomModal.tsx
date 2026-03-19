@@ -50,7 +50,7 @@ export function JoinRoomModal({ isOpen, onClose, onRoomJoined, onSwitchToCreate 
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase().slice(0, 6))}
               placeholder="Enter 6-character code"
-              className="w-full px-4 py-3 bg-bg border border-border rounded-lg text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary uppercase tracking-widest text-center text-lg"
+              className="w-full px-4 py-3.5 min-h-11 bg-bg border border-border rounded-lg text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary uppercase tracking-widest text-center text-lg"
               maxLength={6}
               required
             />
@@ -85,7 +85,7 @@ export function JoinRoomModal({ isOpen, onClose, onRoomJoined, onSwitchToCreate 
             <button
               type="submit"
               disabled={loading || !code.trim() || !playerName.trim()}
-              className="flex-1 py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
+              className="flex-1 py-3.5 min-h-11 bg-primary text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
             >
               {loading ? "Joining..." : "Join Room"}
             </button>

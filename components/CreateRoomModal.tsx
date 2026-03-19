@@ -52,7 +52,7 @@ export function CreateRoomModal({ isOpen, onClose, onRoomCreated, onSwitchToJoin
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               placeholder="Enter your name"
-              className="w-full px-4 py-3 bg-bg border border-border rounded-lg text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-3.5 min-h-11 bg-bg border border-border rounded-lg text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary"
               required
             />
           </div>
@@ -72,7 +72,7 @@ export function CreateRoomModal({ isOpen, onClose, onRoomCreated, onSwitchToJoin
             <button
               type="submit"
               disabled={loading || !playerName.trim()}
-              className="flex-1 py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
+              className="flex-1 py-3.5 min-h-11 bg-primary text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
             >
               {loading ? "Creating..." : "Create Room"}
             </button>

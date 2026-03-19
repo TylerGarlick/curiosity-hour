@@ -47,7 +47,7 @@ export function CategoryFilter({
     <div className="flex flex-wrap gap-2">
       <button
         onClick={handleAllClick}
-        className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+        className={`px-3 py-3 min-h-11 rounded-lg text-sm font-medium transition-colors ${
           isAllActive
             ? "bg-accent text-white"
             : "bg-track text-text-primary hover:bg-border"
@@ -64,7 +64,7 @@ export function CategoryFilter({
           <button
             key={category}
             onClick={() => handleCategoryClick(category)}
-            className={`px-3 py-2 rounded-lg text-sm font-medium capitalize transition-colors ${
+            className={`px-3 py-3 min-h-11 rounded-lg text-sm font-medium capitalize transition-colors ${
               isActive
                 ? "bg-accent text-white"
                 : "bg-track text-text-primary hover:bg-border"

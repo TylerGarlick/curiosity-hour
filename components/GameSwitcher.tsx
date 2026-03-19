@@ -39,7 +39,7 @@ export function GameSwitcher({
     <div ref={ref} className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="px-3 sm:px-4 py-2 bg-surface border border-border rounded-lg text-text-primary hover:bg-track transition-colors font-sans flex items-center gap-2 text-sm sm:text-base truncate"
+        className="px-3 sm:px-4 py-3 min-h-11 bg-surface border border-border rounded-lg text-text-primary hover:bg-track transition-colors font-sans flex items-center gap-2 text-sm sm:text-base truncate"
       >
         <span className="truncate">{gameLabel}</span>
         <span className="text-xs sm:text-sm flex-shrink-0">▼</span>

@@ -34,7 +34,7 @@ export function MiniAdBanner({ onUpgrade }: AdBannerProps) {
       </span>
       <button
         onClick={onUpgrade}
-        className="text-xs font-medium text-accent hover:underline"
+        className="text-xs font-medium text-accent hover:underline px-3 py-3 min-h-11"
       >
         Remove ads — $2.99
       </button>

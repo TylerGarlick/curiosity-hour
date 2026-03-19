@@ -26,7 +26,7 @@ export function ThemeSwitcher() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setIsPanelOpen(!isPanelOpen)}
-        className="p-2 bg-surface border border-border rounded-lg text-text-primary hover:bg-track transition-colors flex items-center gap-2"
+        className="px-3 py-3 min-h-11 bg-surface border border-border rounded-lg text-text-primary hover:bg-track transition-colors flex items-center gap-2"
         title="Theme settings"
       >
         <span className="text-lg">🎨</span>
