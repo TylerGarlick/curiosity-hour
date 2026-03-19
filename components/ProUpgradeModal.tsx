@@ -115,7 +115,7 @@ export function ProUpgradeModal({ isOpen, onClose, onUpgrade }: ProUpgradeModalP
           <button
             onClick={handleStripeCheckout}
             disabled={isProcessing}
-            className="w-full bg-accent text-accent-foreground py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-accent text-accent-foreground py-4 rounded-xl font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[48px] touch-manipulation"
           >
             {isProcessing ? (
               <>
@@ -138,7 +138,7 @@ export function ProUpgradeModal({ isOpen, onClose, onUpgrade }: ProUpgradeModalP
           
           <button
             onClick={onClose}
-            className="w-full py-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+            className="w-full py-3 text-sm text-text-secondary hover:text-text-primary transition-colors min-h-[48px] touch-manipulation"
           >
             Maybe later
           </button>
