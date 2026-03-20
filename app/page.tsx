@@ -12,12 +12,14 @@ import { QuestionCard } from "@/components/QuestionCard";
 import { ActionButtons } from "@/components/ActionButtons";
 import { CustomQuestions } from "@/components/CustomQuestions";
 import { ResetDialog } from "@/components/ResetDialog";
+import { Settings } from "@/components/Settings";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { CreateRoomModal } from "@/components/CreateRoomModal";
 import { JoinRoomModal } from "@/components/JoinRoomModal";
 import { SharedRoomScreen } from "@/components/SharedRoomScreen";
 import { MiniAdBanner } from "@/components/AdBanner";
 import { ProUpgradeModal, ProButton } from "@/components/ProUpgradeModal";
+import { CarMode } from "@/src/modes/CarMode";
 import { getAllQuestions } from "@/lib/questions";
 import { getAvailableQuestions, getAvailableQuestionsSorted, pickRandomQuestion } from "@/lib/game";
 import { Room } from "@/lib/graphql/client";
@@ -29,11 +31,25 @@ const EMPTY_STATE: AppState = {
   customQuestions: [],
 };
 
+interface SettingsState {
+  carModeEnabled: boolean;
+  darkMode: boolean;
+  soundEnabled: boolean;
+}
+
+const DEFAULT_SETTINGS: SettingsState = {
+  carModeEnabled: false,
+  darkMode: true,
+  soundEnabled: true,
+};
+
 export default function Home() {
   const [appState, setAppState] = useLocalStorage<AppState>("curiosity_hour_app", EMPTY_STATE);
+  const [settings, setSettings] = useLocalStorage<SettingsState>("curiosity_hour_settings", DEFAULT_SETTINGS);
   const [mounted, setMounted] = useState(false);
   const [customQuestionsOpen, setCustomQuestionsOpen] = useState(false);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Pro/ monetization state
   const { isPro, upgradeToPro, isLoading: isProLoading } = useProStatus();
@@ -347,11 +363,37 @@ export default function Home() {
             onSelectGame={handleSelectGame}
             onNewGame={handleNewGame}
           />
+          <button
+            onClick={() => setSettingsOpen(true)}
+            className="p-2 text-text-secondary hover:text-text-primary transition-colors"
+            aria-label="Settings"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
         </div>
       </header>
 
       {/* Main Content - mobile-first layout */}
       <main className="flex-1 flex flex-col w-full">
+        {settings.carModeEnabled ? (
+          /* Car Mode UI */
+          <div className="flex-1 flex flex-col">
+            {currentQuestion && (
+              <CarMode
+                question={currentQuestion.text}
+                category={currentQuestion.category}
+                onDone={handleMarkAnswered}
+                onSkip={handleSkip}
+                onReplay={() => {}}
+              />
+            )}
+          </div>
+        ) : (
+          /* Normal Game UI */
+          <>
         {/* Progress indicator - minimal on mobile */}
         <div className="px-4 pt-3">
           <div className="flex items-center justify-between text-xs text-text-secondary mb-1">
@@ -418,6 +460,8 @@ export default function Home() {
             </button>
           </div>
         </div>
+          </>
+        )}
       </main>
 
       {/* Ad banner for free users */}
@@ -446,6 +490,11 @@ export default function Home() {
         isOpen={upgradeModalOpen}
         onClose={() => setUpgradeModalOpen(false)}
         onUpgrade={upgradeToPro}
+      />
+
+      <Settings
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
       />
     </div>
   );

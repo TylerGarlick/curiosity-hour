@@ -47,6 +47,16 @@ export default function App() {
             presentation: 'modal',
           }} 
         />
+        <Stack.Screen 
+          name="design-system" 
+          options={{ 
+            presentation: 'modal',
+            headerShown: true,
+            headerStyle: { backgroundColor: '#0D0D12' },
+            headerTintColor: '#FF6B4A',
+            headerTitle: 'Design System',
+          }} 
+        />
       </Stack>
     </SafeAreaProvider>
   );
