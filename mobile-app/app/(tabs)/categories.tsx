@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQuestionBank, Category } from '../../src/context/QuestionBankContext';
 import { colors, spacing, borderRadius, typography } from '../../src/constants/theme';
@@ -9,6 +9,7 @@ export default function CategoriesScreen() {
     state,
     getSelectedCategories,
     toggleCategory,
+    setSelectedCategories,
     isEntitled,
     toggleNsfw,
     getAvailableQuestionCount,
@@ -31,7 +32,15 @@ export default function CategoriesScreen() {
     const owned = isEntitled(bankId as any);
     
     if (isPaid && !owned) {
-      // Would trigger purchase flow - for now just show locked state
+      // Navigate to purchase screen
+      Alert.alert(
+        'Pack Locked 🔒',
+        'This pack is part of the premium content. Would you like to unlock it?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Unlock', onPress: () => router.push('/purchase-packs') },
+        ]
+      );
       return;
     }
     
@@ -166,7 +175,7 @@ export default function CategoriesScreen() {
           const allAvailable = state.banks
             .filter(b => b.isFree || isEntitled(b.id as any))
             .map(b => b.category);
-          // This would call setSelectedCategories(allAvailable) if we imported it
+          setSelectedCategories(allAvailable);
         }}
       >
         <Text style={styles.allCategoriesText}>Select All Available</Text>

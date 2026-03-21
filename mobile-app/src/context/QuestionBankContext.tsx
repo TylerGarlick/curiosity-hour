@@ -55,7 +55,7 @@ export interface GameState {
   skippedQuestionIds: string[];
 }
 
-export type PackId = 'deep' | 'funny' | 'nostalgia' | 'would-you-rather' | 'intimate' | 'nsfw' | 'spicy';
+export type PackId = 'deep' | 'funny' | 'nostalgia' | 'would-you-rather' | 'intimate' | 'nsfw' | 'spicy' | 'remove_ads' | 'premium';
 
 // ============================================
 // STORAGE KEYS

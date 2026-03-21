@@ -172,24 +172,8 @@ export default function SettingsScreen() {
     Alert.alert('Contact Us', 'Email: hello@curiosityhour.app');
   };
 
-  const handleUnlockAll = () => {
-    Alert.alert(
-      'Unlock All Packs',
-      'This would trigger the purchase flow for all premium packs.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Unlock',
-          onPress: () => {
-            // Simulate unlocking all packs
-            addEntitlement('intimate');
-            addEntitlement('nsfw');
-            addEntitlement('spicy');
-            Alert.alert('Success', 'All packs unlocked!');
-          },
-        },
-      ]
-    );
+  const handleUnlockPacks = () => {
+    router.push('/purchase-packs');
   };
 
   const ownedPacks = getOwnedPacks();
@@ -347,9 +331,9 @@ export default function SettingsScreen() {
           {ownedPaidPacks.length < paidPacks.length && (
             <TouchableOpacity
               style={styles.unlockButton}
-              onPress={handleUnlockAll}
+              onPress={handleUnlockPacks}
             >
-              <Text style={styles.unlockButtonText}>🔓 Unlock All Packs ($1.99 each)</Text>
+              <Text style={styles.unlockButtonText}>🔓 Get More Packs</Text>
             </TouchableOpacity>
           )}
         </View>
