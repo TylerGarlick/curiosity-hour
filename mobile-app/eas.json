@@ -1,0 +1,41 @@
+{
+  "cli": {
+    "version": ">= 9.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "ios": {
+        "simulator": false,
+        "distribution": "internal"
+      },
+      "android": {
+        "distribution": "internal"
+      }
+    },
+    "production": {
+      "ios": {
+        "simulator": false,
+        "distribution": "app-store"
+      },
+      "android": {
+        "distribution": "play-store"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "TODO: ADD YOUR APPLE ID",
+        "ascAppId": "TODO: ADD YOUR ASC APP ID"
+      },
+      "android": {
+        "serviceAccountJsonPath": "./path-to-service-account.json",
+        "track": "production"
+      }
+    }
+  }
+}
