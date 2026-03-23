@@ -3,11 +3,11 @@
 
 import { Game } from '../stores/gameStore';
 import { shuffle } from './shuffle';
-import { sampleQuestions, Question } from '../data/questions';
+import { questions, type Question } from '../data/questions';
 
 // Get the full question object by ID
 export function getQuestionById(questionId: string): Question | undefined {
-  return sampleQuestions.find((q: Question) => q.id === questionId);
+  return questions.find((q: Question) => q.id === questionId);
 }
 
 // Get next question for a game using unread-first, then skipped algorithm

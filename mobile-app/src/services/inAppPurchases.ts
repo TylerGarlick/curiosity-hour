@@ -1,5 +1,6 @@
 // In-App Purchase Service for Curiosity Hour
 // Handles StoreKit (iOS) and Play Billing (Android) integration
+// Updated for expo-iap v3 API
 
 import * as IAP from 'expo-iap';
 import { Platform } from 'react-native';
@@ -88,7 +89,7 @@ const ENTITLEMENTS_STORAGE_KEY = '@curiosity/entitlements';
 
 let isInitialized = false;
 let products: IAP.Product[] = [];
-let purchaseListener: IAP.Subscription | null = null;
+let purchaseListener: { remove: () => void } | null = null;
 
 // ============================================
 // INITIALIZATION
@@ -106,20 +107,22 @@ export async function initializeIAP(): Promise<boolean> {
   try {
     console.log('[IAP] Initializing...');
     
-    // Check if IAP is available on this device
-    const available = await IAP.getCanFetch();
-    if (!available) {
-      console.warn('[IAP] In-app purchases not available on this device');
-      return false;
-    }
-
-    // Connect to the store
-    await IAP.connectToStore();
+    // Connect to the store using new v3 API
+    await IAP.initConnection();
     console.log('[IAP] Connected to store');
+    
+    // Set up purchase listener
+    purchaseListener = IAP.purchaseUpdatedListener((purchase) => {
+      console.log('[IAP] Purchase updated:', purchase.productId);
+      // Handle the purchase - add to storage and acknowledge
+      if (purchase.productId) {
+        addPurchaseToStorage(purchase.productId).catch(console.error);
+      }
+    });
     
     isInitialized = true;
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error('[IAP] Failed to initialize:', error);
     return false;
   }
@@ -136,10 +139,10 @@ export async function endIAP(): Promise<void> {
       purchaseListener.remove();
       purchaseListener = null;
     }
-    await IAP.disconnectStore();
+    await IAP.endConnection();
     isInitialized = false;
     console.log('[IAP] Disconnected from store');
-  } catch (error) {
+  } catch (error: any) {
     console.error('[IAP] Error ending IAP:', error);
   }
 }
@@ -161,18 +164,19 @@ export async function getProducts(): Promise<Product[]> {
     const productIds = Object.values(PACK_PRODUCT_IDS);
     console.log('[IAP] Fetching products:', productIds);
     
-    products = await IAP.getProducts({ productIds });
+    const result = await IAP.fetchProducts({ skus: productIds });
+    products = (result as IAP.Product[]) || [];
     console.log('[IAP] Products fetched:', products.length);
     
     return products.map(p => ({
       id: p.id,
       title: p.title,
       description: p.description,
-      price: p.price,
-      priceAmount: p.priceAmount,
-      priceCurrencyCode: p.priceCurrencyCode,
+      price: p.displayPrice,
+      priceAmount: p.price ?? 0,
+      priceCurrencyCode: p.currency,
     }));
-  } catch (error) {
+  } catch (error: any) {
     console.error('[IAP] Failed to fetch products:', error);
     return [];
   }
@@ -199,7 +203,7 @@ export async function purchasePack(packId: string): Promise<PurchaseResult> {
       if (!retryProduct) {
         return { success: false, error: 'Product not found' };
       }
-      return initiatePurchase(retryProduct.id);
+      return await initiatePurchase(retryProduct.id);
     }
     
     return await initiatePurchase(product.id);
@@ -207,10 +211,10 @@ export async function purchasePack(packId: string): Promise<PurchaseResult> {
     console.error('[IAP] Purchase failed:', error);
     
     // Handle specific error codes
-    if (error.code === 'E_USER_CANCELLED') {
+    if (error.code === IAP.ErrorCode.UserCancelled || error.code === 'user-cancelled') {
       return { success: false, error: 'Purchase cancelled' };
     }
-    if (error.code === 'E_ALREADY_OWNED') {
+    if (error.code === IAP.ErrorCode.AlreadyOwned || error.code === 'already-owned') {
       // Item already owned, treat as success
       return { success: true, productId: packId };
     }
@@ -223,32 +227,43 @@ async function initiatePurchase(productId: string): Promise<PurchaseResult> {
   try {
     console.log('[IAP] Initiating purchase for:', productId);
     
-    // Request purchase
-    const result = await IAP.requestPurchase({ sku: productId });
+    // Build platform-specific request
+    const platformRequest = Platform.select({
+      ios: { sku: productId },
+      android: { skus: [productId] },
+      default: { sku: productId },
+    });
+    
+    // Request purchase using new v3 API
+    const result = await IAP.requestPurchase({
+      type: 'in-app',
+      request: platformRequest as IAP.RequestPurchasePropsByPlatforms,
+    });
+    
     console.log('[IAP] Purchase result:', result);
     
-    // Parse the result - IAP returns { transactionId, productId } on success
-    if (result && result.productId) {
-      // Mark as purchased locally
-      await addPurchaseToStorage(productId);
-      
-      return {
-        success: true,
-        productId: productId,
-      };
+    // Parse the result - handle both single purchase and array
+    if (Array.isArray(result) && result.length > 0) {
+      const purchase = result[0];
+      if (purchase.productId) {
+        await addPurchaseToStorage(purchase.productId);
+        return { success: true, productId: purchase.productId };
+      }
+    } else if (result && 'productId' in result && result.productId) {
+      await addPurchaseToStorage(result.productId);
+      return { success: true, productId: result.productId };
     }
     
     return { success: false, error: 'Unknown purchase result' };
   } catch (error: any) {
     console.error('[IAP] Purchase error:', error);
     
-    if (error.code === 'E_ALREADY_OWNED' || error.code === 'E_IAP_PURCHASED') {
-      // Already owned - add to storage and return success
+    if (error.code === IAP.ErrorCode.AlreadyOwned || error.code === 'already-owned') {
       await addPurchaseToStorage(productId);
       return { success: true, productId };
     }
     
-    if (error.code === 'E_USER_CANCELLED') {
+    if (error.code === IAP.ErrorCode.UserCancelled || error.code === 'user-cancelled') {
       return { success: false, error: 'Purchase cancelled' };
     }
     
@@ -271,23 +286,26 @@ export async function restorePurchases(): Promise<PurchaseResult> {
   try {
     console.log('[IAP] Restoring purchases...');
     
-    const purchases = await IAP.getProducts(Object.values(PACK_PRODUCT_IDS));
+    // Fetch products first to ensure we have product info
+    await IAP.fetchProducts({ skus: Object.values(PACK_PRODUCT_IDS) });
     
-    // Get all previous transactions
-    const history = await IAP.getPurchaseHistory();
-    console.log('[IAP] Purchase history:', history?.length || 0, 'transactions');
+    // Get available purchases
+    const available = await IAP.getAvailablePurchases();
+    console.log('[IAP] Available purchases:', available?.length || 0, 'transactions');
     
-    if (!history || history.length === 0) {
+    if (!available || available.length === 0) {
       console.log('[IAP] No previous purchases found');
       return { success: true, productId: undefined };
     }
     
     // Add all restored purchases to storage
     const restoredIds: string[] = [];
-    for (const transaction of history) {
-      if (transaction.productId) {
-        await addPurchaseToStorage(transaction.productId);
-        restoredIds.push(transaction.productId);
+    for (const purchase of available) {
+      if (purchase.productId) {
+        await addPurchaseToStorage(purchase.productId);
+        if (!restoredIds.includes(purchase.productId)) {
+          restoredIds.push(purchase.productId);
+        }
       }
     }
     
@@ -300,7 +318,7 @@ export async function restorePurchases(): Promise<PurchaseResult> {
   } catch (error: any) {
     console.error('[IAP] Restore failed:', error);
     
-    if (error.code === 'E_USER_CANCELLED') {
+    if (error.code === IAP.ErrorCode.UserCancelled || error.code === 'user-cancelled') {
       return { success: false, error: 'Restore cancelled' };
     }
     
@@ -322,18 +340,7 @@ export function isPurchased(productId: string): boolean {
     return true;
   }
   
-  // Check in storage (sync check)
-  try {
-    const stored = AsyncStorage.getItemSync(ENTITLEMENTS_STORAGE_KEY);
-    if (stored) {
-      const purchases: string[] = JSON.parse(stored);
-      return purchases.includes(productId);
-    }
-  } catch (error) {
-    console.error('[IAP] Error checking purchase status:', error);
-  }
-  
-  return false;
+  return false; // Async check not possible in sync function
 }
 
 /**

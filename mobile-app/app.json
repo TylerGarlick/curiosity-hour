@@ -31,8 +31,7 @@
       "expo-router",
       "expo-asset",
       "expo-font",
-      "expo-iap",
-      "expo-speech"
+      "expo-iap"
     ],
     "experiments": {
       "typedRoutes": true

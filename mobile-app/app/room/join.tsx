@@ -164,7 +164,6 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     color: colors.textPrimary,
     fontSize: 16,
-    borderWidth: 1,
     borderWidth: 2,
     borderColor: colors.border,
     textAlign: 'center',

@@ -24,6 +24,7 @@ export interface QuestionBank {
   name: string;
   category: Category;
   isFree: boolean;
+  isNsfw?: boolean;
   questions: Question[];
   icon: string;
   color: string;
@@ -358,6 +359,7 @@ export function QuestionBankProvider({ children }: QuestionBankProviderProps) {
 
     try {
       // Dynamically import question data
+      type RawQuestion = { id: string; text?: string; question?: string };
       const [
         deepQuestions,
         funnyQuestions,
@@ -367,12 +369,13 @@ export function QuestionBankProvider({ children }: QuestionBankProviderProps) {
         wouldYouRatherQuestions,
         nsfwQuestions,
       ] = await Promise.all([
-        import('../../../data/deep_questions.json').then(m => m.default),
-        import('../../../data/intimate_questions.json').then(m => m.default),
-        import('../../../data/spicy_questions.json').then(m => m.default),
-        import('../../../data/questions_nostalgia.json').then(m => m.default),
-        import('../../../data/would_you_rather.json').then(m => m.default),
-        import('../../../data/nsfw.json').then(m => m.default),
+        import('../../data/deep.json').then(m => m.default),
+        import('../../data/funny.json').then(m => m.default),
+        import('../../data/intimate.json').then(m => m.default),
+        import('../../data/spicy.json').then(m => m.default),
+        import('../../data/nostalgia.json').then(m => m.default),
+        import('../../data/would-you-rather.json').then(m => m.default),
+        import('../../data/nsfw.json').then(m => m.default),
       ]);
 
       // Generate funny questions since there's no funny.json
