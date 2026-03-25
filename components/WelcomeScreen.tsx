@@ -5,13 +5,11 @@ import { RelationshipMode } from "@/types";
 
 interface WelcomeScreenProps {
   onStartGame: (names: string[], mode: RelationshipMode) => void;
-  onCreateRoom: () => void;
-  onJoinRoom: () => void;
   isPro?: boolean;
   onUpgrade?: () => void;
 }
 
-export function WelcomeScreen({ onStartGame, onCreateRoom, onJoinRoom, isPro, onUpgrade }: WelcomeScreenProps) {
+export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenProps) {
   const [playerCount, setPlayerCount] = useState(2);
   const [names, setNames] = useState<string[]>(["", ""]);
   const [mode, setMode] = useState<RelationshipMode>("partner");
@@ -119,24 +117,6 @@ export function WelcomeScreen({ onStartGame, onCreateRoom, onJoinRoom, isPro, on
           >
             Start Game
           </button>
-        </div>
-
-        <div className="mt-6 text-center">
-          <p className="text-sm text-text-secondary mb-3">or play remotely</p>
-          <div className="flex gap-3">
-            <button
-              onClick={onCreateRoom}
-              className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25 active:scale-95 touch-manipulation"
-            >
-              Create Room
-            </button>
-            <button
-              onClick={onJoinRoom}
-              className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg shadow-purple-500/25 active:scale-95 touch-manipulation"
-            >
-              Join Room
-            </button>
-          </div>
         </div>
 
         {/* Pro upgrade prompt for free users */}

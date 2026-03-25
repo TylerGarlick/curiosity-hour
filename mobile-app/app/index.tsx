@@ -15,13 +15,7 @@ export default function WelcomeScreen() {
     router.push('/(tabs)/question');
   };
 
-  const handleCreateRoom = () => {
-    router.push('/room/create');
-  };
 
-  const handleJoinRoom = () => {
-    router.push('/room/join');
-  };
 
   return (
     <View style={styles.container}>
@@ -90,31 +84,7 @@ export default function WelcomeScreen() {
           <Text style={styles.startButtonText}>Start Game</Text>
         </TouchableOpacity>
 
-        {/* Divider */}
-        <View style={styles.divider}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>OR</Text>
-          <View style={styles.dividerLine} />
-        </View>
 
-        {/* Shared Room Buttons */}
-        <View style={styles.sharedRoomButtons}>
-          <TouchableOpacity 
-            style={styles.sharedRoomButton} 
-            onPress={handleCreateRoom}
-          >
-            <Text style={styles.sharedRoomIcon}>🎮</Text>
-            <Text style={styles.sharedRoomText}>Create Room</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={styles.sharedRoomButton} 
-            onPress={handleJoinRoom}
-          >
-            <Text style={styles.sharedRoomIcon}>🔗</Text>
-            <Text style={styles.sharedRoomText}>Join Room</Text>
-          </TouchableOpacity>
-        </View>
 
         {/* Settings Link */}
         <TouchableOpacity 

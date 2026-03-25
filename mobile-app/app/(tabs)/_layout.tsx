@@ -64,15 +64,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="room"
-        options={{
-          title: 'Room',
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon="👥" label="Room" focused={focused} />
-          ),
-        }}
-      />
+
       <Tabs.Screen
         name="profile"
         options={{
