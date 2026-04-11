@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "curiosity_hour",
+  "project_id": "bfcf0eb9-7764-4c0c-a604-0fde8e249a5e"
+}

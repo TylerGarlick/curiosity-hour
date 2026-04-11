@@ -1,7 +1,21 @@
-The purpose of this application is to get to know my partner or friend better by asking thought provoking questions.
+# Repository Guidelines
 
+**Project:** Curiosity Hour
+**Purpose:** A question game for couples/friends to get to know each other better through thought-provoking questions.
 
-<!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:ca08a54f -->
+## Tech Stack
+- **Frontend:** Next.js, React, TypeScript, Tailwind CSS
+- **Mobile:** React Native Expo
+- **Backend:** Next.js API routes, Supabase (Postgres)
+- **Testing:** Jest, Playwright
+
+## Project Structure
+- `app/` - Next.js app router
+- `components/` - React UI components
+- `mobile-app/` - React Native Expo app
+- `hooks/`, `lib/`, `types/` - shared code
+- `data/`, `*.json` - question datasets
+
 ## Beads Issue Tracker
 
 This project uses **bd (beads)** for issue tracking. Run `bd prime` to see full workflow context and commands.
@@ -46,4 +60,3 @@ bd close <id>         # Complete work
 - NEVER stop before pushing - that leaves work stranded locally
 - NEVER say "ready to push when you are" - YOU must push
 - If push fails, resolve and retry until it succeeds
-<!-- END BEADS INTEGRATION -->

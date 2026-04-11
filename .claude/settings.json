@@ -1,6 +1,30 @@
 {
-  "name": "Curiosity Hour",
   "description": "A question game to help you get to know your partner or friend better",
+  "hooks": {
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "command": "bd prime",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "bd prime",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      }
+    ]
+  },
+  "name": "Curiosity Hour",
   "settings": {
     "autoCommit": false
   }
