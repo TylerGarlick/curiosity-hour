@@ -2,11 +2,19 @@
   "expo": {
     "name": "Curiosity Hour",
     "slug": "curiosity-hour-mobile",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "scheme": "curiosity-hour",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.curiosityhour.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Curiosity Hour needs camera access for QR code scanning.",
+        "NSMicrophoneUsageDescription": "Curiosity Hour needs microphone access for voice features."
+      }
+    },
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
