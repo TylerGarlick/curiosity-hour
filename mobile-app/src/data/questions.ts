@@ -1,9 +1,9 @@
 // Import all questions from the main app data files
-import deepQuestions from '../../../deep_questions.json';
-import intimateQuestions from '../../../intimate_questions.json';
-import nostalgiaQuestions from '../../../questions_nostalgia.json';
-import spicyQuestions from '../../../spicy_questions.json';
-import wouldYouRather from '../../../would_you_rather.json';
+import deepQuestions from '../../data/deep_questions.json';
+import intimateQuestions from '../../data/intimate_questions.json';
+import nostalgiaQuestions from '../../data/questions_nostalgia.json';
+import spicyQuestions from '../../data/spicy_questions.json';
+import wouldYouRather from '../../data/would_you_rather.json';
 
 export interface Question {
   id: string;
