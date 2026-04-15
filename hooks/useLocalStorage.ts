@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 
-export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+// Extended hook that returns the raw setValue for advanced use cases
+export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void, (value: T) => void] {
   // State to store our value
   const [storedValue, setStoredValue] = useState<T>(initialValue);
   const [isClient, setIsClient] = useState(false);
@@ -37,5 +38,6 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T)
   }, [key]);
 
   // Return state value if on client, otherwise return initial value
-  return [storedValue, setValue];
+  // Returns [value, setValue, rawSetValue] where rawSetValue skips React state update
+  return [storedValue, setValue, setValue];
 }

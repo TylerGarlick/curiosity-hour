@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { AppState, GameSession, Question, RelationshipMode, Category } from "@/types";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useProStatus } from "@/hooks/useProStatus";
+import { useCarMode } from "@/hooks/useCarMode";
+import { useSettings } from "@/hooks/useSettings";
+import { CarModeView } from "@/components/CarModeView";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { GameSwitcher } from "@/components/GameSwitcher";
 import { CategoryFilter } from "@/components/CategoryFilter";
@@ -16,6 +19,7 @@ import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { CreateRoomModal } from "@/components/CreateRoomModal";
 import { JoinRoomModal } from "@/components/JoinRoomModal";
 import { SharedRoomScreen } from "@/components/SharedRoomScreen";
+import { SettingsPanel } from "@/components/SettingsPanel";
 import { MiniAdBanner } from "@/components/AdBanner";
 import { ProUpgradeModal, ProButton } from "@/components/ProUpgradeModal";
 import { getAllQuestions } from "@/lib/questions";
@@ -34,10 +38,17 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [customQuestionsOpen, setCustomQuestionsOpen] = useState(false);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  // Settings (Auto-TTS)
+  const { settings: appSettings, updateSettings } = useSettings();
 
   // Pro/ monetization state
   const { isPro, upgradeToPro, isLoading: isProLoading } = useProStatus();
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+
+  // Car Mode state
+  const [carMode, setCarMode] = useCarMode();
 
   // Shared room state
   const [createRoomOpen, setCreateRoomOpen] = useState(false);
@@ -81,90 +92,7 @@ export default function Home() {
     : [];
   const currentQuestion = allQuestions.find((q) => q.id === activeGame?.currentId);
 
-  // Shared room mode
-  if (sharedRoom) {
-    return (
-      <SharedRoomScreen
-        code={sharedRoom.code}
-        playerId={sharedRoom.playerId}
-        onBack={() => setSharedRoom(null)}
-      />
-    );
-  }
-
-  // Welcome screen
-  if (!hasGames || !activeGame) {
-    return (
-      <>
-        <WelcomeScreen
-          onStartGame={(names, mode) => {
-          const newGame: GameSession = {
-            id: `game_${Date.now()}`,
-            playerNames: names,
-            relationshipMode: mode,
-            answeredIds: [],
-            skippedIds: [],
-            currentId: null,
-            activeCategories: "all",
-            createdAt: Date.now(),
-          };
-
-          const updatedState = {
-            ...appState,
-            activeGameId: newGame.id,
-            games: [...appState.games, newGame],
-          };
-
-          // Pick first random question
-          const allQuestionsFiltered = getAllQuestions(appState.customQuestions);
-          const available = getAvailableQuestions(newGame, allQuestionsFiltered);
-          if (available.length > 0) {
-            const firstQuestionId = pickRandomQuestion(available);
-            newGame.currentId = firstQuestionId;
-          }
-
-          setAppState(updatedState);
-        }}
-        onCreateRoom={() => {
-            setCreateRoomOpen(true);
-          }}
-          onJoinRoom={() => {
-            setJoinRoomOpen(true);
-          }}
-        />
-
-        <CreateRoomModal
-          isOpen={createRoomOpen}
-          onClose={() => setCreateRoomOpen(false)}
-          onRoomCreated={(code, playerId, room) => {
-            setCreateRoomOpen(false);
-            setSharedRoom({ code, playerId, room });
-          }}
-          onSwitchToJoin={() => {
-            setCreateRoomOpen(false);
-            setJoinRoomOpen(true);
-          }}
-          isPro={isPro}
-          onUpgrade={() => setUpgradeModalOpen(true)}
-        />
-
-        <JoinRoomModal
-          isOpen={joinRoomOpen}
-          onClose={() => setJoinRoomOpen(false)}
-          onRoomJoined={(code, playerId, room) => {
-            setJoinRoomOpen(false);
-            setSharedRoom({ code, playerId, room });
-          }}
-          onSwitchToCreate={() => {
-            setJoinRoomOpen(false);
-            setCreateRoomOpen(true);
-          }}
-        />
-      </>
-    );
-  }
-
-  // Game screen
+  // Game screen handlers
   const handleMarkAnswered = () => {
     if (!currentQuestion || !activeGame) return;
 
@@ -316,6 +244,112 @@ export default function Home() {
     });
   };
 
+  // Shared room mode
+  if (sharedRoom) {
+    return (
+      <SharedRoomScreen
+        code={sharedRoom.code}
+        playerId={sharedRoom.playerId}
+        onBack={() => setSharedRoom(null)}
+      />
+    );
+  }
+
+  // Car Mode view
+  if (carMode && hasGames && activeGame) {
+    return (
+      <CarModeView
+        question={currentQuestion || null}
+        onNext={handleMarkAnswered}
+        onPrevious={() => {
+          // Go back to previous question (simplified: just pick a new random one from answered)
+          if (activeGame.answeredIds.length > 0) {
+            const prevQuestionId = activeGame.answeredIds[activeGame.answeredIds.length - 1];
+            const updatedGames = appState.games.map((g) =>
+              g.id === activeGame.id ? { ...g, currentId: prevQuestionId } : g
+            );
+            setAppState({ ...appState, games: updatedGames });
+          }
+        }}
+        onStop={() => setCarMode(false)}
+        disabled={availableQuestions.length === 0}
+      />
+    );
+  }
+
+  // Welcome screen
+  if (!hasGames || !activeGame) {
+    return (
+      <>
+        <WelcomeScreen
+          onStartGame={(names, mode) => {
+            const newGame: GameSession = {
+              id: `game_${Date.now()}`,
+              playerNames: names,
+              relationshipMode: mode,
+              answeredIds: [],
+              skippedIds: [],
+              currentId: null,
+              activeCategories: "all",
+              createdAt: Date.now(),
+            };
+
+            const updatedState = {
+              ...appState,
+              activeGameId: newGame.id,
+              games: [...appState.games, newGame],
+            };
+
+            // Pick first random question
+            const allQuestionsFiltered = getAllQuestions(appState.customQuestions);
+            const available = getAvailableQuestions(newGame, allQuestionsFiltered);
+            if (available.length > 0) {
+              const firstQuestionId = pickRandomQuestion(available);
+              newGame.currentId = firstQuestionId;
+            }
+
+            setAppState(updatedState);
+          }}
+          onCreateRoom={() => {
+            setCreateRoomOpen(true);
+          }}
+          onJoinRoom={() => {
+            setJoinRoomOpen(true);
+          }}
+        />
+
+        <CreateRoomModal
+          isOpen={createRoomOpen}
+          onClose={() => setCreateRoomOpen(false)}
+          onRoomCreated={(code, playerId, room) => {
+            setCreateRoomOpen(false);
+            setSharedRoom({ code, playerId, room });
+          }}
+          onSwitchToJoin={() => {
+            setCreateRoomOpen(false);
+            setJoinRoomOpen(true);
+          }}
+          isPro={isPro}
+          onUpgrade={() => setUpgradeModalOpen(true)}
+        />
+
+        <JoinRoomModal
+          isOpen={joinRoomOpen}
+          onClose={() => setJoinRoomOpen(false)}
+          onRoomJoined={(code, playerId, room) => {
+            setJoinRoomOpen(false);
+            setSharedRoom({ code, playerId, room });
+          }}
+          onSwitchToCreate={() => {
+            setJoinRoomOpen(false);
+            setCreateRoomOpen(true);
+          }}
+        />
+      </>
+    );
+  }
+
+  // Game screen
   return (
     <div className="min-h-screen bg-bg flex flex-col">
       {/* Simple Header - compact for mobile */}
@@ -372,7 +406,12 @@ export default function Home() {
 
         {/* Question Card - takes most of the screen on mobile */}
         <div className="flex-1 flex items-center justify-center p-4">
-          <QuestionCard question={currentQuestion || null} />
+          <QuestionCard 
+            question={currentQuestion || null} 
+            autoTts={appSettings.autoTts}
+            autoAdvanceDelayMs={appSettings.autoAdvanceDelayMs}
+            onAutoAdvance={handleMarkAnswered}
+          />
         </div>
 
         {/* Action Buttons - bottom anchored, thumb-friendly */}
@@ -390,6 +429,24 @@ export default function Home() {
               className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
             >
               My Questions
+            </button>
+            
+            {/* Car Mode toggle */}
+            <button
+              onClick={() => setCarMode(true)}
+              className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
+              title="Enable Car Mode for driving"
+            >
+              🚗 Car Mode
+            </button>
+            
+            {/* Settings toggle */}
+            <button
+              onClick={() => setSettingsOpen(true)}
+              className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
+              title="Settings"
+            >
+              ⚙️ Settings
             </button>
             
             {/* Category filter trigger - mobile optimized */}
@@ -426,6 +483,11 @@ export default function Home() {
       )}
 
       {/* Dialogs */}
+      <SettingsPanel
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
+
       <CustomQuestions
         questions={appState.customQuestions}
         onAdd={handleAddCustomQuestion}

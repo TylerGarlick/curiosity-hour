@@ -1,31 +1,55 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Question } from "@/types";
+import { useTTS } from "@/hooks/useTTS";
 
 interface QuestionCardProps {
   question: Question | null;
+  autoTts?: boolean;
+  autoAdvanceDelayMs?: number;
+  onAutoAdvance?: () => void;
 }
 
-export function QuestionCard({ question }: QuestionCardProps) {
-  const [isSpeaking, setIsSpeaking] = useState(false);
+export function QuestionCard({ 
+  question, 
+  autoTts = false,
+  autoAdvanceDelayMs = 1500,
+  onAutoAdvance,
+}: QuestionCardProps) {
+  const [manualSpeak, setManualSpeak] = useState(false);
+  
+  const { isSpeaking, speak, cancel, autoSpeak } = useTTS({
+    autoTts,
+    autoAdvanceDelayMs,
+    onSpeechEnd: onAutoAdvance,
+  });
+
+  // Auto-speak when question changes and autoTts is enabled
+  useEffect(() => {
+    if (question && autoTts && !manualSpeak) {
+      autoSpeak(question.text);
+    }
+  }, [question?.id, autoTts, manualSpeak, autoSpeak]);
 
   const handleSpeak = useCallback(() => {
     if (!question) return;
     
     if (isSpeaking) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
+      cancel();
+      setManualSpeak(false);
     } else {
-      const utterance = new SpeechSynthesisUtterance(question.text);
-      utterance.rate = 0.9;
-      utterance.pitch = 1;
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-      window.speechSynthesis.speak(utterance);
-      setIsSpeaking(true);
+      setManualSpeak(true);
+      speak(question.text, false); // Don't auto-advance on manual speak
     }
-  }, [question, isSpeaking]);
+  }, [question, isSpeaking, cancel, speak]);
+
+  // Stop speaking when question changes (prevent overlap)
+  useEffect(() => {
+    return () => {
+      cancel();
+    };
+  }, [question?.id, cancel]);
 
   if (!question) {
     return (
