@@ -23,7 +23,7 @@ import { SettingsPanel } from "@/components/SettingsPanel";
 import { MiniAdBanner } from "@/components/AdBanner";
 import { ProUpgradeModal, ProButton } from "@/components/ProUpgradeModal";
 import { getAllQuestions } from "@/lib/questions";
-import { getAvailableQuestions, getAvailableQuestionsSorted, pickRandomQuestion } from "@/lib/game";
+import { getAvailableQuestions, getAvailableQuestionsSorted, initializeShuffledQuestions, getNextQuestionFromShuffled, advanceQuestionIndex } from "@/lib/game";
 import { Room } from "@/lib/graphql/client";
 
 const EMPTY_STATE: AppState = {
@@ -96,14 +96,14 @@ export default function Home() {
   const handleMarkAnswered = () => {
     if (!currentQuestion || !activeGame) return;
 
-    const updatedGame = {
+    // Advance the question index
+    const updatedGame = advanceQuestionIndex({
       ...activeGame,
       answeredIds: [...activeGame.answeredIds, currentQuestion.id],
-    };
+    });
 
-    // Use sorted to prefer non-skipped questions
-    const available = getAvailableQuestionsSorted(updatedGame, allQuestions);
-    const nextQuestionId = pickRandomQuestion(available);
+    // Get next question from shuffled list
+    const nextQuestionId = getNextQuestionFromShuffled(updatedGame);
 
     const updatedGames = appState.games.map((g) =>
       g.id === activeGame.id
@@ -124,17 +124,14 @@ export default function Home() {
   const handleSkip = () => {
     if (!currentQuestion || !activeGame) return;
 
-    // Add current question to skipped list
-    const updatedGame = {
+    // Add current question to skipped list and advance index
+    const updatedGame = advanceQuestionIndex({
       ...activeGame,
       skippedIds: [...activeGame.skippedIds, currentQuestion.id],
-    };
+    });
 
-    // Use sorted to prefer non-skipped questions
-    const available = getAvailableQuestionsSorted(updatedGame, allQuestions).filter(
-      (q) => q.id !== currentQuestion.id
-    );
-    const nextQuestionId = pickRandomQuestion(available);
+    // Get next question from shuffled list
+    const nextQuestionId = getNextQuestionFromShuffled(updatedGame);
 
     const updatedGames = appState.games.map((g) =>
       g.id === activeGame.id
@@ -159,13 +156,14 @@ export default function Home() {
       activeCategories: categories,
     };
 
-    const available = getAvailableQuestions(updatedGame, allQuestions);
-    const nextQuestionId = available.length > 0 ? pickRandomQuestion(available) : null;
+    // Reinitialize shuffled questions when categories change
+    const shuffledGame = initializeShuffledQuestions(updatedGame, allQuestions);
+    const nextQuestionId = getNextQuestionFromShuffled(shuffledGame);
 
     const updatedGames = appState.games.map((g) =>
       g.id === activeGame.id
         ? {
-            ...updatedGame,
+            ...shuffledGame,
             currentId: nextQuestionId,
           }
         : g
@@ -230,12 +228,13 @@ export default function Home() {
       currentId: null,
     };
 
-    const available = getAvailableQuestions(updatedGame, allQuestions);
-    const firstQuestionId = pickRandomQuestion(available);
-    updatedGame.currentId = firstQuestionId;
+    // Reinitialize shuffled questions on reset
+    const shuffledGame = initializeShuffledQuestions(updatedGame, allQuestions);
+    const firstQuestionId = getNextQuestionFromShuffled(shuffledGame);
+    shuffledGame.currentId = firstQuestionId;
 
     const updatedGames = appState.games.map((g) =>
-      g.id === activeGame.id ? updatedGame : g
+      g.id === activeGame.id ? shuffledGame : g
     );
 
     setAppState({
@@ -300,13 +299,16 @@ export default function Home() {
               games: [...appState.games, newGame],
             };
 
-            // Pick first random question
+            // Initialize shuffled questions and pick first
             const allQuestionsFiltered = getAllQuestions(appState.customQuestions);
-            const available = getAvailableQuestions(newGame, allQuestionsFiltered);
-            if (available.length > 0) {
-              const firstQuestionId = pickRandomQuestion(available);
-              newGame.currentId = firstQuestionId;
-            }
+            const shuffledGame = initializeShuffledQuestions(newGame, allQuestionsFiltered);
+            const firstQuestionId = getNextQuestionFromShuffled(shuffledGame);
+            shuffledGame.currentId = firstQuestionId;
+
+            // Update the game in the state
+            updatedState.games = updatedState.games.map((g) =>
+              g.id === newGame.id ? shuffledGame : g
+            );
 
             setAppState(updatedState);
           }}

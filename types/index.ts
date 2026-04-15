@@ -27,6 +27,9 @@ export interface GameSession {
   currentId: string | null;
   activeCategories: Category[] | "all";
   createdAt: number;
+  // Fisher-Yates shuffle state for guaranteed no-repeat question order
+  shuffledQuestionIds?: string[];
+  questionIndex?: number;
 }
 
 export interface AppState {
