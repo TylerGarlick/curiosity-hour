@@ -3,6 +3,7 @@ import { Lora, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeInitializer } from "@/components/ThemeInitializer";
 import { PWAInitializer } from "@/components/PWAInitializer";
+import { OfflineIndicator } from "@/components/OfflineIndicator";
 
 const lora = Lora({
   variable: "--font-lora",
@@ -19,6 +20,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  viewportFit: "cover",
 };
 
 export const metadata: Metadata = {
@@ -27,11 +29,15 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "Curiosity Hour",
+  },
+  other: {
+    'format-detection': 'telephone, date, address, email, number',
   },
   icons: {
     apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180" },
       { url: "/icon-192.svg", sizes: "192x192" },
       { url: "/icon-192.svg", sizes: "512x512" },
     ],
@@ -50,6 +56,7 @@ export default function RootLayout({
       >
         <ThemeInitializer />
         <PWAInitializer />
+        <OfflineIndicator />
         {children}
       </body>
     </html>

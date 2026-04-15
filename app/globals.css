@@ -65,6 +65,27 @@ html {
   padding-bottom: env(safe-area-inset-bottom, 0.5rem);
 }
 
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0.5rem);
+}
+
+.mt-safe {
+  margin-top: env(safe-area-inset-top, 0);
+}
+
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Safe area inset for fixed/sticky elements */
+.safe-inset-top {
+  top: env(safe-area-inset-top, 0);
+}
+
+.safe-inset-bottom {
+  bottom: env(safe-area-inset-bottom, 0);
+}
+
 /* Touch optimization - prevents double-tap zoom on buttons */
 .touch-manipulation {
   touch-action: manipulation;
