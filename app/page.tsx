@@ -266,44 +266,51 @@ export default function Home() {
     );
   }
 
-  // Welcome screen
+  // Welcome screen with slide-up drawer effect
   if (!hasGames || !activeGame) {
     return (
       <>
-        <WelcomeScreen
-          onStartGame={(names, mode) => {
-            const newGame: GameSession = {
-              id: `game_${Date.now()}`,
-              playerNames: names,
-              relationshipMode: mode,
-              answeredIds: [],
-              skippedIds: [],
-              currentId: null,
-              activeCategories: "all",
-              createdAt: Date.now(),
-            };
+        {/* Main Welcome Screen Container - slides up when resume modal is open */}
+        <div
+          className={`min-h-screen bg-bg transition-transform duration-300 ease-in-out ${
+            resumeModalOpen ? 'translate-y-[-30%]' : 'translate-y-0'
+          }`}
+        >
+          <WelcomeScreen
+            onStartGame={(names, mode) => {
+              const newGame: GameSession = {
+                id: `game_${Date.now()}`,
+                playerNames: names,
+                relationshipMode: mode,
+                answeredIds: [],
+                skippedIds: [],
+                currentId: null,
+                activeCategories: "all",
+                createdAt: Date.now(),
+              };
 
-            const updatedState = {
-              ...appState,
-              activeGameId: newGame.id,
-              games: [...appState.games, newGame],
-            };
+              const updatedState = {
+                ...appState,
+                activeGameId: newGame.id,
+                games: [...appState.games, newGame],
+              };
 
-            // Initialize shuffled questions and pick first
-            const allQuestionsFiltered = getAllQuestions(appState.customQuestions);
-            const shuffledGame = initializeShuffledQuestions(newGame, allQuestionsFiltered);
-            const firstQuestionId = getNextQuestionFromShuffled(shuffledGame);
-            shuffledGame.currentId = firstQuestionId;
+              // Initialize shuffled questions and pick first
+              const allQuestionsFiltered = getAllQuestions(appState.customQuestions);
+              const shuffledGame = initializeShuffledQuestions(newGame, allQuestionsFiltered);
+              const firstQuestionId = getNextQuestionFromShuffled(shuffledGame);
+              shuffledGame.currentId = firstQuestionId;
 
-            // Update the game in the state
-            updatedState.games = updatedState.games.map((g) =>
-              g.id === newGame.id ? shuffledGame : g
-            );
+              // Update the game in the state
+              updatedState.games = updatedState.games.map((g) =>
+                g.id === newGame.id ? shuffledGame : g
+              );
 
-            setAppState(updatedState);
-            setResumeModalOpen(false); // Close resume modal when starting new game
-          }}
-        />
+              setAppState(updatedState);
+              setResumeModalOpen(false); // Close resume modal when starting new game
+            }}
+          />
+        </div>
         {/* Cog Wheel Button - Fixed Bottom Right (only on startup screen with saved games) */}
         {hasGames && (
           <button

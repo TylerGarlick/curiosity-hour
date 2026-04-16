@@ -49,25 +49,31 @@ export function ResumeGameModal({
   const activeGame = games.find(g => g.id === activeGameId);
 
   return (
-    <div 
-      className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9999] flex items-center justify-center p-4" 
-      onClick={onClose}
-    >
+    <>
+      {/* Click overlay to close (invisible, covers the area above the drawer) */}
       <div 
-        className="bg-surface/95 backdrop-blur-md rounded-2xl border border-border/50 w-full max-w-md shadow-2xl shadow-black/30 max-h-[80vh] flex flex-col"
+        className="fixed inset-0 z-[4999]" 
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      
+      {/* Drawer - positioned at bottom, slides up from below */}
+      <div 
+        className="fixed bottom-0 left-0 right-0 z-[5000] bg-surface/95 backdrop-blur-md rounded-t-2xl border-t border-border/50 shadow-2xl shadow-black/30 max-h-[70vh] flex flex-col animate-in slide-in-from-bottom duration-300 ease-in-out"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border">
-          <div>
-            <h2 className="text-xl font-semibold text-text-primary">📋 Saved Sessions</h2>
-            <p className="text-sm text-text-secondary mt-1">
+        {/* Header with drag handle visual */}
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <div className="flex-1 flex flex-col items-center">
+            <div className="w-10 h-1.5 bg-border rounded-full mb-2" />
+            <h2 className="text-lg font-semibold text-text-primary">📋 Saved Sessions</h2>
+            <p className="text-xs text-text-secondary mt-0.5">
               {games.length} {games.length === 1 ? 'session' : 'sessions'} saved
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-track transition-colors"
+            className="p-2 rounded-lg hover:bg-track transition-colors ml-2"
             aria-label="Close"
           >
             <svg className="w-5 h-5 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -180,7 +186,7 @@ export function ResumeGameModal({
 
         {/* Footer */}
         <div className="p-4 border-t border-border">
-            <button
+          <button
             onClick={onClose}
             className="w-full py-2.5 px-4 bg-track text-text-primary rounded-lg font-medium hover:bg-border transition-colors"
           >
@@ -188,6 +194,6 @@ export function ResumeGameModal({
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }

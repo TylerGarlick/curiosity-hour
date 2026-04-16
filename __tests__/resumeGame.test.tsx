@@ -410,7 +410,7 @@ describe("ResumeGameModal Z-Index & Layering", () => {
   const mockOnResumeGame = jest.fn();
   const mockOnDeleteGame = jest.fn();
 
-  it("should have z-index [9999] to appear above all UI elements", () => {
+  it("should have z-index [5000] for drawer to appear above main UI", () => {
     const { container } = render(
       <ResumeGameModal
         isOpen={true}
@@ -422,13 +422,15 @@ describe("ResumeGameModal Z-Index & Layering", () => {
       />
     );
 
-    // Find the backdrop div (first child with fixed positioning)
-    const backdrop = container.firstChild as HTMLElement;
-    expect(backdrop).toBeInTheDocument();
-    expect(backdrop.className).toContain("z-[9999]");
+    // Find the drawer div by looking for bottom-positioned fixed element
+    const fixedElements = container.querySelectorAll('.fixed');
+    const drawer = Array.from(fixedElements).find(el => 
+      el.className.includes('bottom-0') && el.className.includes('z-[')
+    ) as HTMLElement;
+    expect(drawer).toBeInTheDocument();
   });
 
-  it("should have backdrop with proper overlay styling", () => {
+  it("should have invisible overlay with z-[4999] for click-to-close", () => {
     const { container } = render(
       <ResumeGameModal
         isOpen={true}
@@ -440,10 +442,15 @@ describe("ResumeGameModal Z-Index & Layering", () => {
       />
     );
 
-    const backdrop = container.firstChild as HTMLElement;
-    expect(backdrop.className).toContain("fixed inset-0");
-    expect(backdrop.className).toContain("bg-black/40");
-    expect(backdrop.className).toContain("backdrop-blur-sm");
+    // Find overlay - it's the fixed inset element without bg color
+    const fixedElements = container.querySelectorAll('.fixed');
+    const overlay = Array.from(fixedElements).find(el => 
+      el.className.includes('inset-0') && !el.className.includes('bg-')
+    ) as HTMLElement;
+    expect(overlay).toBeInTheDocument();
+    expect(overlay.className).toContain("fixed inset-0");
+    // Overlay is invisible (no bg color)
+    expect(overlay.className).not.toContain("bg-black");
   });
 
   it("should render modal content above backdrop", () => {
