@@ -16,15 +16,11 @@ import { ActionButtons } from "@/components/ActionButtons";
 import { CustomQuestions } from "@/components/CustomQuestions";
 import { ResetDialog } from "@/components/ResetDialog";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
-import { CreateRoomModal } from "@/components/CreateRoomModal";
-import { JoinRoomModal } from "@/components/JoinRoomModal";
-import { SharedRoomScreen } from "@/components/SharedRoomScreen";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { MiniAdBanner } from "@/components/AdBanner";
 import { ProUpgradeModal, ProButton } from "@/components/ProUpgradeModal";
 import { getAllQuestions } from "@/lib/questions";
 import { getAvailableQuestions, getAvailableQuestionsSorted, initializeShuffledQuestions, getNextQuestionFromShuffled, advanceQuestionIndex } from "@/lib/game";
-import { Room } from "@/lib/graphql/client";
 
 const EMPTY_STATE: AppState = {
   activeGameId: null,
@@ -49,33 +45,6 @@ export default function Home() {
 
   // Car Mode state
   const [carMode, setCarMode] = useCarMode();
-
-  // Shared room state
-  const [createRoomOpen, setCreateRoomOpen] = useState(false);
-  const [joinRoomOpen, setJoinRoomOpen] = useState(false);
-  const [sharedRoom, setSharedRoom] = useState<{ code: string; playerId: string; room: Room } | null>(null);
-
-  // Restore shared room from localStorage on mount
-  useEffect(() => {
-    const savedRoom = localStorage.getItem("curiosity_hour_shared_room");
-    if (savedRoom) {
-      try {
-        const parsed = JSON.parse(savedRoom);
-        setSharedRoom(parsed);
-      } catch (e) {
-        localStorage.removeItem("curiosity_hour_shared_room");
-      }
-    }
-  }, []);
-
-  // Save shared room to localStorage when it changes
-  useEffect(() => {
-    if (sharedRoom) {
-      localStorage.setItem("curiosity_hour_shared_room", JSON.stringify(sharedRoom));
-    } else {
-      localStorage.removeItem("curiosity_hour_shared_room");
-    }
-  }, [sharedRoom]);
 
   useEffect(() => {
     setMounted(true);
@@ -243,17 +212,6 @@ export default function Home() {
     });
   };
 
-  // Shared room mode
-  if (sharedRoom) {
-    return (
-      <SharedRoomScreen
-        code={sharedRoom.code}
-        playerId={sharedRoom.playerId}
-        onBack={() => setSharedRoom(null)}
-      />
-    );
-  }
-
   // Car Mode view
   if (carMode && hasGames && activeGame) {
     return (
@@ -279,75 +237,39 @@ export default function Home() {
   // Welcome screen
   if (!hasGames || !activeGame) {
     return (
-      <>
-        <WelcomeScreen
-          onStartGame={(names, mode) => {
-            const newGame: GameSession = {
-              id: `game_${Date.now()}`,
-              playerNames: names,
-              relationshipMode: mode,
-              answeredIds: [],
-              skippedIds: [],
-              currentId: null,
-              activeCategories: "all",
-              createdAt: Date.now(),
-            };
+      <WelcomeScreen
+        onStartGame={(names, mode) => {
+          const newGame: GameSession = {
+            id: `game_${Date.now()}`,
+            playerNames: names,
+            relationshipMode: mode,
+            answeredIds: [],
+            skippedIds: [],
+            currentId: null,
+            activeCategories: "all",
+            createdAt: Date.now(),
+          };
 
-            const updatedState = {
-              ...appState,
-              activeGameId: newGame.id,
-              games: [...appState.games, newGame],
-            };
+          const updatedState = {
+            ...appState,
+            activeGameId: newGame.id,
+            games: [...appState.games, newGame],
+          };
 
-            // Initialize shuffled questions and pick first
-            const allQuestionsFiltered = getAllQuestions(appState.customQuestions);
-            const shuffledGame = initializeShuffledQuestions(newGame, allQuestionsFiltered);
-            const firstQuestionId = getNextQuestionFromShuffled(shuffledGame);
-            shuffledGame.currentId = firstQuestionId;
+          // Initialize shuffled questions and pick first
+          const allQuestionsFiltered = getAllQuestions(appState.customQuestions);
+          const shuffledGame = initializeShuffledQuestions(newGame, allQuestionsFiltered);
+          const firstQuestionId = getNextQuestionFromShuffled(shuffledGame);
+          shuffledGame.currentId = firstQuestionId;
 
-            // Update the game in the state
-            updatedState.games = updatedState.games.map((g) =>
-              g.id === newGame.id ? shuffledGame : g
-            );
+          // Update the game in the state
+          updatedState.games = updatedState.games.map((g) =>
+            g.id === newGame.id ? shuffledGame : g
+          );
 
-            setAppState(updatedState);
-          }}
-          onCreateRoom={() => {
-            setCreateRoomOpen(true);
-          }}
-          onJoinRoom={() => {
-            setJoinRoomOpen(true);
-          }}
-        />
-
-        <CreateRoomModal
-          isOpen={createRoomOpen}
-          onClose={() => setCreateRoomOpen(false)}
-          onRoomCreated={(code, playerId, room) => {
-            setCreateRoomOpen(false);
-            setSharedRoom({ code, playerId, room });
-          }}
-          onSwitchToJoin={() => {
-            setCreateRoomOpen(false);
-            setJoinRoomOpen(true);
-          }}
-          isPro={isPro}
-          onUpgrade={() => setUpgradeModalOpen(true)}
-        />
-
-        <JoinRoomModal
-          isOpen={joinRoomOpen}
-          onClose={() => setJoinRoomOpen(false)}
-          onRoomJoined={(code, playerId, room) => {
-            setJoinRoomOpen(false);
-            setSharedRoom({ code, playerId, room });
-          }}
-          onSwitchToCreate={() => {
-            setJoinRoomOpen(false);
-            setCreateRoomOpen(true);
-          }}
-        />
-      </>
+          setAppState(updatedState);
+        }}
+      />
     );
   }
 

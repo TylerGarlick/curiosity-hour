@@ -30,11 +30,3 @@ export const supabaseAdmin = supabaseServiceKey && supabaseUrl
       },
     })
   : null;
-
-// Database schema for rooms:
-// Table: rooms
-// - code: text PRIMARY KEY (6-char room code)
-// - data: jsonb (Room object)
-// - created_at: timestamptz (auto)
-// - updated_at: timestamptz (auto)
-export const ROOMS_TABLE = 'rooms';

@@ -6,7 +6,6 @@ export interface User {
   email: string;
   passwordHash: string;
   createdAt: number;
-  roomCodes: string[];
 }
 
 // In-memory store (replace with DB in production)
@@ -46,8 +45,7 @@ export const userStore = {
       id: generateUserId(),
       email: email.toLowerCase(),
       passwordHash,
-      createdAt: Date.now(),
-      roomCodes: []
+      createdAt: Date.now()
     };
 
     users.set(user.id, user);
@@ -83,20 +81,6 @@ export const userStore = {
     const userId = sessions.get(sessionToken);
     if (!userId) return undefined;
     return users.get(userId);
-  },
-
-  // Add room to user's room list
-  addRoomToUser(userId: string, roomCode: string): void {
-    const user = users.get(userId);
-    if (user && !user.roomCodes.includes(roomCode)) {
-      user.roomCodes.push(roomCode);
-    }
-  },
-
-  // Get user's rooms
-  getUserRooms(userId: string): string[] {
-    const user = users.get(userId);
-    return user ? user.roomCodes : [];
   },
 
   // Delete session (logout)
