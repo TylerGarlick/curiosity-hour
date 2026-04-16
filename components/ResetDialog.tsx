@@ -38,29 +38,32 @@ export function ResetDialog({
         <div className="bg-surface rounded-3xl border border-border max-w-sm w-full">
           <div className="p-6">
             <h2 className="text-xl font-serif font-bold text-text-primary mb-4">
-              What would you like to do?
+              🤔 What would you like to do?
             </h2>
             <div className="space-y-3">
               <button
                 onClick={() => setAction("reset")}
-                className="w-full px-4 py-3 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-left"
+                className="w-full px-4 py-3 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-left flex items-center gap-2"
               >
-                Reset Progress
+                <span>🔄</span>
+                <span>Reset Progress</span>
               </button>
               <button
                 onClick={() => setAction("new")}
-                className="w-full px-4 py-3 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-left"
+                className="w-full px-4 py-3 bg-track hover:bg-border text-text-primary rounded-lg font-sans font-medium transition-colors text-left flex items-center gap-2"
               >
-                Start New Game
+                <span>🎮</span>
+                <span>Start New Game</span>
               </button>
             </div>
           </div>
           <div className="border-t border-border p-4 flex justify-end">
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg font-sans font-medium"
+              className="px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg font-sans font-medium flex items-center gap-2"
             >
-              Cancel
+              <span>❌</span>
+              <span>Cancel</span>
             </button>
           </div>
         </div>
@@ -106,20 +109,22 @@ export function ResetDialog({
               setAction("none");
               setConfirmed(false);
             }}
-            className="px-4 py-2 bg-track text-text-primary rounded-lg font-sans font-medium hover:bg-border transition-colors"
+            className="px-4 py-2 bg-track text-text-primary rounded-lg font-sans font-medium hover:bg-border transition-colors flex items-center gap-2"
           >
-            Cancel
+            <span>❌</span>
+            <span>Cancel</span>
           </button>
           <button
             onClick={handleConfirm}
             disabled={!confirmed}
-            className={`px-4 py-2 rounded-lg font-sans font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg font-sans font-medium transition-colors flex items-center gap-2 ${
               confirmed
                 ? "bg-rose-500 hover:bg-rose-600 text-white cursor-pointer"
                 : "bg-track text-text-secondary cursor-not-allowed"
             }`}
           >
-            {confirmText}
+            {confirmed && <span>{action === "reset" ? "🔄" : "🎮"}</span>}
+            <span>{confirmText}</span>
           </button>
         </div>
       </div>

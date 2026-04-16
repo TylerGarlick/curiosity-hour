@@ -39,14 +39,14 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
         <div className="bg-surface rounded-3xl shadow-lg border border-border p-6">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-text-primary mb-2">
-              Curiosity Hour
+              🎯 Curiosity Hour
             </h1>
-            <p className="text-base text-text-secondary">Get to know each other better</p>
+            <p className="text-base text-text-secondary">💕 Get to know each other better</p>
           </div>
 
           <div className="mb-6">
             <label className="block text-sm font-semibold text-text-primary mb-3">
-              Players
+              👥 Players
             </label>
             <div className="flex gap-3">
               {[2, 3, 4].map((count) => (
@@ -67,7 +67,7 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
 
           <div className="mb-6">
             <label className="block text-sm font-semibold text-text-primary mb-3">
-              Names
+              ✏️ Names
             </label>
             <div className="space-y-3">
               {Array(playerCount)
@@ -87,7 +87,7 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
 
           <div className="mb-8">
             <label className="block text-sm font-semibold text-text-primary mb-3">
-              Relationship
+              💞 Relationship
             </label>
             <div className="flex gap-3">
               {(["friend", "partner"] as const).map((m) => (
@@ -122,7 +122,7 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
                 : "bg-track text-text-secondary cursor-not-allowed"
             }`}
           >
-            Start Game
+            🎮 Start Game
           </button>
         </div>
 
@@ -130,16 +130,13 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
         {!isPro && onUpgrade && (
           <div className="mt-6 p-4 bg-accent/10 rounded-xl border border-accent/20">
             <p className="text-sm text-text-secondary text-center mb-2">
-              Support the app and remove ads
+              ⭐ Support the app and remove ads
             </p>
             <button
               onClick={onUpgrade}
               className="w-full py-2 bg-accent text-accent-foreground rounded-lg font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-              </svg>
-              Go Pro — $2.99
+              💎 Go Pro — $2.99
             </button>
           </div>
         )}

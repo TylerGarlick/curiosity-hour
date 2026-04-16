@@ -41,6 +41,7 @@ export function GameSwitcher({
         onClick={() => setIsOpen(!isOpen)}
         className="px-3 sm:px-4 py-2 bg-surface border border-border rounded-lg text-text-primary hover:bg-track transition-colors font-sans flex items-center gap-2 text-sm sm:text-base truncate"
       >
+        <span className="text-sm mr-1">🎮</span>
         <span className="truncate">{gameLabel}</span>
         <span className="text-xs sm:text-sm flex-shrink-0">▼</span>
       </button>
@@ -65,20 +66,21 @@ export function GameSwitcher({
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    {game.id === activeGameId && <span>✓</span>}
+                    {game.id === activeGameId && <span>✅</span>}
                     <span className="truncate">{game.playerNames.join(" & ")}</span>
                   </div>
                 </button>
               ))
             )}
-            <button
+              <button
               onClick={() => {
                 onNewGame();
                 setIsOpen(false);
               }}
-              className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border-t border-slate-200 dark:border-slate-800 mt-2 pt-2"
+              className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border-t border-slate-200 dark:border-slate-800 mt-2 pt-2 flex items-center gap-2"
             >
-              + New Game
+              <span>➕</span>
+              <span>New Game</span>
             </button>
           </div>
         </div>

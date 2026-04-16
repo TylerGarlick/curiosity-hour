@@ -22,7 +22,7 @@ export function ActionButtons({
             : "bg-accent text-white hover:bg-accent-hover shadow-lg shadow-accent/25 cursor-pointer"
         }`}
       >
-        ✓ Done
+        ✅ Done
       </button>
       <button
         onClick={onSkip}
@@ -33,7 +33,7 @@ export function ActionButtons({
             : "bg-surface border-border text-text-primary hover:bg-track cursor-pointer"
         }`}
       >
-        Skip
+        ⏭️ Skip
       </button>
     </div>
   );

@@ -19,7 +19,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-text-primary">Settings</h2>
+          <h2 className="text-xl font-semibold text-text-primary">⚙️ Settings</h2>
           <button
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-track transition-colors"
@@ -35,7 +35,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
           {/* Tier Mode Toggle */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-text-primary font-medium">Mode</label>
+              <label className="text-text-primary font-medium">🎯 Mode</label>
               <p className="text-sm text-text-secondary mt-1">
                 Basic: 200 curated questions, no ads
               </p>
@@ -55,14 +55,14 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
               />
             </button>
           </div>
-          <div className="text-xs text-text-secondary">
+          <div className="text-xs text-text-secondary mt-1">
             {settings.tierMode === "basic" ? "🟢 Basic (200 questions)" : "⭐ Pro (All questions + features)"}
           </div>
 
           {/* Auto-TTS Toggle */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-text-primary font-medium">Auto-read questions</label>
+              <label className="text-text-primary font-medium">🔊 Auto-read questions</label>
               <p className="text-sm text-text-secondary mt-1">
                 Automatically read questions aloud when they appear
               </p>
@@ -87,7 +87,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
           {settings.autoTts && (
             <div>
               <label className="text-text-primary font-medium block mb-2">
-                Delay before auto-advance
+                ⏱️ Delay before auto-advance
               </label>
               <div className="flex items-center gap-3">
                 <input
@@ -115,7 +115,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             onClick={onClose}
             className="w-full py-2.5 px-4 bg-accent text-white rounded-lg font-medium hover:bg-accent/90 transition-colors"
           >
-            Done
+            ✅ Done
           </button>
         </div>
       </div>

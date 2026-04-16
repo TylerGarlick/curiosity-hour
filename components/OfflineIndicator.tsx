@@ -52,14 +52,14 @@ export function OfflineIndicator() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            <span>Back Online</span>
+            <span>✅ Back Online</span>
           </>
         ) : (
           <>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636a9 9 0 010 12.728m0 0a9 9 0 01-12.728 0m12.728 0L5.636 5.636" />
             </svg>
-            <span>Offline Mode</span>
+            <span>⚠️ Offline Mode</span>
           </>
         )}
       </div>

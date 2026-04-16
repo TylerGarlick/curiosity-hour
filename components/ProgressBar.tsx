@@ -11,7 +11,7 @@ export function ProgressBar({ answered, total }: ProgressBarProps) {
   return (
     <div>
       <div className="flex justify-between items-center mb-2 text-sm">
-        <span className="text-text-secondary">Progress</span>
+        <span className="text-text-secondary">📊 Progress</span>
         <span className="text-text-primary font-medium">{answered} / {total}</span>
       </div>
       <div className="w-full bg-track rounded-full h-2">

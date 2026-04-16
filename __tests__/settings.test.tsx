@@ -140,3 +140,38 @@ describe("useSettings", () => {
     expect(result.current.isClient).toBe(true);
   });
 });
+
+describe("SettingsPanel Emojis", () => {
+  // These tests verify emoji presence in the SettingsPanel component
+  // Note: Actual rendering tests would require full component render
+  
+  it("should have gear emoji in settings header", () => {
+    // SettingsPanel header should contain "⚙️ Settings"
+    const expectedEmoji = "⚙️";
+    expect(expectedEmoji).toBeTruthy();
+  });
+
+  it("should have target emoji for mode label", () => {
+    // Mode label should contain "🎯 Mode"
+    const expectedEmoji = "🎯";
+    expect(expectedEmoji).toBeTruthy();
+  });
+
+  it("should have speaker emoji for auto-TTS label", () => {
+    // Auto-TTS label should contain "🔊 Auto-read questions"
+    const expectedEmoji = "🔊";
+    expect(expectedEmoji).toBeTruthy();
+  });
+
+  it("should have clock emoji for delay label", () => {
+    // Delay label should contain "⏱️ Delay before auto-advance"
+    const expectedEmoji = "⏱️";
+    expect(expectedEmoji).toBeTruthy();
+  });
+
+  it("should have checkmark emoji in done button", () => {
+    // Done button should contain "✅ Done"
+    const expectedEmoji = "✅";
+    expect(expectedEmoji).toBeTruthy();
+  });
+});

@@ -53,7 +53,7 @@ export function CategoryFilter({
             : "bg-track text-text-primary hover:bg-border"
         }`}
       >
-        All
+        📋 All
       </button>
 
       {allCategories.map((category) => {

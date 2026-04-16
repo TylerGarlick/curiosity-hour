@@ -60,7 +60,7 @@ export function ResumeGameModal({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border">
           <div>
-            <h2 className="text-xl font-semibold text-text-primary">Saved Sessions</h2>
+            <h2 className="text-xl font-semibold text-text-primary">📋 Saved Sessions</h2>
             <p className="text-sm text-text-secondary mt-1">
               {games.length} {games.length === 1 ? 'session' : 'sessions'} saved
             </p>
@@ -145,25 +145,28 @@ export function ResumeGameModal({
                     {!isActive && (
                       <button
                         onClick={() => onResumeGame(game.id)}
-                        className="flex-1 py-2 px-3 bg-accent text-white text-sm font-medium rounded-lg hover:bg-accent/90 transition-colors"
+                        className="flex-1 py-2 px-3 bg-accent text-white text-sm font-medium rounded-lg hover:bg-accent/90 transition-colors flex items-center justify-center gap-2"
                       >
-                        Resume
+                        <span>▶️</span>
+                        <span>Resume</span>
                       </button>
                     )}
                     {isActive && (
                       <button
                         disabled
-                        className="flex-1 py-2 px-3 bg-track text-text-secondary text-sm font-medium rounded-lg cursor-default"
+                        className="flex-1 py-2 px-3 bg-track text-text-secondary text-sm font-medium rounded-lg cursor-default flex items-center justify-center gap-2"
                       >
-                        Currently Playing
+                        <span>▶️</span>
+                        <span>Currently Playing</span>
                       </button>
                     )}
                     <button
                       onClick={() => onDeleteGame(game.id)}
-                      className="py-2 px-3 bg-rose-500/10 text-rose-500 text-sm font-medium rounded-lg hover:bg-rose-500/20 transition-colors"
+                      className="py-2 px-3 bg-rose-500/10 text-rose-500 text-sm font-medium rounded-lg hover:bg-rose-500/20 transition-colors flex items-center justify-center gap-2"
                       title="Delete session"
                       aria-label="Delete session"
                     >
+                      <span>🗑️</span>
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
@@ -177,11 +180,11 @@ export function ResumeGameModal({
 
         {/* Footer */}
         <div className="p-4 border-t border-border">
-          <button
+            <button
             onClick={onClose}
             className="w-full py-2.5 px-4 bg-track text-text-primary rounded-lg font-medium hover:bg-border transition-colors"
           >
-            Close
+            ❌ Close
           </button>
         </div>
       </div>

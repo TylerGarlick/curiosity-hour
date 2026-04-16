@@ -64,7 +64,7 @@ describe("ResumeGameModal", () => {
       />
     );
 
-    expect(screen.getByText("Saved Sessions")).toBeInTheDocument();
+    expect(screen.getByText("📋 Saved Sessions")).toBeInTheDocument();
     expect(screen.getByText("2 sessions saved")).toBeInTheDocument();
   });
 
@@ -127,8 +127,13 @@ describe("ResumeGameModal", () => {
       />
     );
 
-    const resumeButton = screen.getByText("Resume");
-    fireEvent.click(resumeButton);
+    // Find the resume button by aria-label or by looking for non-disabled button with "Resume" text
+    const resumeButtons = screen.getAllByText("Resume");
+    // Filter for the one that's not disabled (active game shows "Currently Playing" instead)
+    const resumeButton = resumeButtons.find(btn => !btn.closest("button:disabled"));
+    if (resumeButton && resumeButton.closest("button")) {
+      fireEvent.click(resumeButton.closest("button")!);
+    }
 
     expect(mockOnResumeGame).toHaveBeenCalledWith("game_2");
   });
@@ -145,7 +150,8 @@ describe("ResumeGameModal", () => {
       />
     );
 
-    const currentlyPlayingButton = screen.getByText("Currently Playing");
+    // Find the disabled button by looking for the one containing "Currently Playing"
+    const currentlyPlayingButton = screen.getByText("Currently Playing").closest("button");
     expect(currentlyPlayingButton).toBeDisabled();
   });
 
@@ -179,7 +185,7 @@ describe("ResumeGameModal", () => {
       />
     );
 
-    const closeButton = screen.getByText("Close");
+    const closeButton = screen.getByText("❌ Close");
     fireEvent.click(closeButton);
 
     expect(mockOnClose).toHaveBeenCalled();
@@ -302,6 +308,85 @@ describe("ResumeGameModal", () => {
 
     // Friend mode should show 👯
     expect(screen.getByText("👯")).toBeInTheDocument();
+  });
+
+  it("displays emoji in header title", () => {
+    render(
+      <ResumeGameModal
+        isOpen={true}
+        onClose={mockOnClose}
+        games={mockGames}
+        activeGameId="game_1"
+        onResumeGame={mockOnResumeGame}
+        onDeleteGame={mockOnDeleteGame}
+      />
+    );
+
+    expect(screen.getByText(/📋 Saved Sessions/)).toBeInTheDocument();
+  });
+
+  it("displays resume button with play emoji", () => {
+    render(
+      <ResumeGameModal
+        isOpen={true}
+        onClose={mockOnClose}
+        games={mockGames}
+        activeGameId="game_1"
+        onResumeGame={mockOnResumeGame}
+        onDeleteGame={mockOnDeleteGame}
+      />
+    );
+
+    // Play emojis appear in both resume and currently playing buttons
+    const playEmojis = screen.getAllByText("▶️");
+    expect(playEmojis.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("displays delete button with trash emoji", () => {
+    render(
+      <ResumeGameModal
+        isOpen={true}
+        onClose={mockOnClose}
+        games={mockGames}
+        activeGameId="game_1"
+        onResumeGame={mockOnResumeGame}
+        onDeleteGame={mockOnDeleteGame}
+      />
+    );
+
+    // There are multiple delete buttons (one per game), so use getAllBy
+    const trashEmojis = screen.getAllByText("🗑️");
+    expect(trashEmojis.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("displays close button with X emoji", () => {
+    render(
+      <ResumeGameModal
+        isOpen={true}
+        onClose={mockOnClose}
+        games={mockGames}
+        activeGameId="game_1"
+        onResumeGame={mockOnResumeGame}
+        onDeleteGame={mockOnDeleteGame}
+      />
+    );
+
+    expect(screen.getByText("❌ Close")).toBeInTheDocument();
+  });
+
+  it("displays empty state with mailbox emoji", () => {
+    render(
+      <ResumeGameModal
+        isOpen={true}
+        onClose={mockOnClose}
+        games={[]}
+        activeGameId={null}
+        onResumeGame={mockOnResumeGame}
+        onDeleteGame={mockOnDeleteGame}
+      />
+    );
+
+    expect(screen.getByText("📭")).toBeInTheDocument();
   });
 });
 
