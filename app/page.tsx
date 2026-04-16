@@ -17,10 +17,11 @@ import { CustomQuestions } from "@/components/CustomQuestions";
 import { ResetDialog } from "@/components/ResetDialog";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { SettingsPanel } from "@/components/SettingsPanel";
+import { ResumeGameModal } from "@/components/ResumeGameModal";
 import { MiniAdBanner } from "@/components/AdBanner";
 import { ProUpgradeModal, ProButton } from "@/components/ProUpgradeModal";
 import { getAllQuestions } from "@/lib/questions";
-import { getAvailableQuestions, getAvailableQuestionsSorted, initializeShuffledQuestions, getNextQuestionFromShuffled, advanceQuestionIndex } from "@/lib/game";
+import { getAvailableQuestions, getAvailableQuestionsSorted, initializeShuffledQuestions, getNextQuestionFromShuffled, advanceQuestionIndex, filterQuestionsByTier } from "@/lib/game";
 
 const EMPTY_STATE: AppState = {
   activeGameId: null,
@@ -35,6 +36,7 @@ export default function Home() {
   const [customQuestionsOpen, setCustomQuestionsOpen] = useState(false);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [resumeModalOpen, setResumeModalOpen] = useState(false);
 
   // Settings (Auto-TTS)
   const { settings: appSettings, updateSettings } = useSettings();
@@ -56,10 +58,14 @@ export default function Home() {
   const hasGames = appState.games.length > 0;
   const activeGame = appState.games.find((g) => g.id === appState.activeGameId);
   const allQuestions = getAllQuestions(appState.customQuestions);
+  
+  // Filter questions by tier mode
+  const tierFilteredQuestions = filterQuestionsByTier(allQuestions, appSettings.tierMode);
+  
   const availableQuestions = activeGame
-    ? getAvailableQuestions(activeGame, allQuestions)
+    ? getAvailableQuestions(activeGame, tierFilteredQuestions)
     : [];
-  const currentQuestion = allQuestions.find((q) => q.id === activeGame?.currentId);
+  const currentQuestion = tierFilteredQuestions.find((q) => q.id === activeGame?.currentId);
 
   // Game screen handlers
   const handleMarkAnswered = () => {
@@ -178,6 +184,31 @@ export default function Home() {
       ...appState,
       activeGameId: gameId,
     });
+  };
+
+  const handleResumeGame = (gameId: string) => {
+    setAppState({
+      ...appState,
+      activeGameId: gameId,
+    });
+    setResumeModalOpen(false);
+  };
+
+  const handleDeleteGame = (gameId: string) => {
+    const updatedGames = appState.games.filter(g => g.id !== gameId);
+    const newActiveGameId = appState.activeGameId === gameId 
+      ? (updatedGames.length > 0 ? updatedGames[0].id : null)
+      : appState.activeGameId;
+    
+    setAppState({
+      ...appState,
+      games: updatedGames,
+      activeGameId: newActiveGameId,
+    });
+    // Don't close modal if we deleted the active game - let user select another
+    if (updatedGames.length === 0) {
+      setResumeModalOpen(false);
+    }
   };
 
   const handleNewGame = () => {
@@ -349,21 +380,26 @@ export default function Home() {
 
           {/* Secondary actions - subtle on mobile */}
           <div className="flex items-center justify-between text-xs">
-            <button
-              onClick={() => setCustomQuestionsOpen(true)}
-              className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
-            >
-              My Questions
-            </button>
+            {/* Custom Questions - Pro only */}
+            {appSettings.tierMode === "pro" && (
+              <button
+                onClick={() => setCustomQuestionsOpen(true)}
+                className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
+              >
+                My Questions
+              </button>
+            )}
             
-            {/* Car Mode toggle */}
-            <button
-              onClick={() => setCarMode(true)}
-              className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
-              title="Enable Car Mode for driving"
-            >
-              🚗 Car Mode
-            </button>
+            {/* Car Mode toggle - Pro only */}
+            {appSettings.tierMode === "pro" && (
+              <button
+                onClick={() => setCarMode(true)}
+                className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
+                title="Enable Car Mode for driving"
+              >
+                🚗 Car Mode
+              </button>
+            )}
             
             {/* Settings toggle */}
             <button
@@ -400,6 +436,34 @@ export default function Home() {
             </button>
           </div>
         </div>
+
+        {/* Cog Wheel Button - Fixed Bottom Right */}
+        <button
+          onClick={() => setResumeModalOpen(true)}
+          className="fixed bottom-6 right-6 w-12 h-12 bg-surface border border-border rounded-full shadow-lg hover:bg-track transition-all hover:scale-110 active:scale-95 z-40 flex items-center justify-center group"
+          title="Saved Sessions"
+          aria-label="Open saved sessions"
+        >
+          <svg 
+            className="w-6 h-6 text-text-secondary group-hover:text-text-primary transition-colors" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={1.5} 
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" 
+            />
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={1.5} 
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" 
+            />
+          </svg>
+        </button>
       </main>
 
       {/* Ad banner for free users */}
@@ -427,6 +491,15 @@ export default function Home() {
         onNewGame={handleNewGame}
         isOpen={resetDialogOpen}
         onClose={() => setResetDialogOpen(false)}
+      />
+
+      <ResumeGameModal
+        isOpen={resumeModalOpen}
+        onClose={() => setResumeModalOpen(false)}
+        games={appState.games}
+        activeGameId={appState.activeGameId}
+        onResumeGame={handleResumeGame}
+        onDeleteGame={handleDeleteGame}
       />
 
       <ProUpgradeModal
