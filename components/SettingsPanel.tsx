@@ -13,16 +13,16 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   if (!isOpen || !isClient) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div 
-        className="bg-surface/95 backdrop-blur-md rounded-2xl border border-border/50 p-6 w-full max-w-md shadow-2xl shadow-black/30"
+        className="card-style-elevated card-texture p-6 w-full max-w-md"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-text-primary">⚙️ Settings</h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-track transition-colors"
+            className="p-2 rounded-lg hover:bg-track/80 transition-all active:scale-95 touch-manipulation shadow-sm"
             aria-label="Close settings"
           >
             <svg className="w-5 h-5 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -59,32 +59,32 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             {settings.tierMode === "basic" ? "🟢 Basic (200 questions)" : "⭐ Pro (All questions + features)"}
           </div>
 
-          {/* Auto-TTS Toggle */}
+          {/* Global Auto-Read Toggle */}
           <div className="flex items-center justify-between">
             <div>
               <label className="text-text-primary font-medium">🔊 Auto-read questions</label>
               <p className="text-sm text-text-secondary mt-1">
-                Automatically read questions aloud when they appear
+                Automatically read questions aloud (Car Mode always enabled)
               </p>
             </div>
             <button
-              onClick={() => updateSettings({ autoTts: !settings.autoTts })}
+              onClick={() => updateSettings({ globalAutoRead: !settings.globalAutoRead })}
               className={`relative w-12 h-6 rounded-full transition-colors ${
-                settings.autoTts ? "bg-accent" : "bg-track"
+                settings.globalAutoRead ? "bg-accent" : "bg-track"
               }`}
               role="switch"
-              aria-checked={settings.autoTts}
+              aria-checked={settings.globalAutoRead}
             >
               <span
                 className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                  settings.autoTts ? "left-7" : "left-1"
+                  settings.globalAutoRead ? "left-7" : "left-1"
                 }`}
               />
             </button>
           </div>
 
           {/* Auto-Advance Delay */}
-          {settings.autoTts && (
+          {settings.globalAutoRead && (
             <div>
               <label className="text-text-primary font-medium block mb-2">
                 ⏱️ Delay before auto-advance
@@ -113,7 +113,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         <div className="mt-6 pt-4 border-t border-border">
           <button
             onClick={onClose}
-            className="w-full py-2.5 px-4 bg-accent text-white rounded-lg font-medium hover:bg-accent/90 transition-colors"
+            className="w-full py-2.5 px-4 bg-accent text-white rounded-lg font-medium hover:bg-accent-hover transition-all active:scale-95 touch-manipulation shadow-md"
           >
             ✅ Done
           </button>

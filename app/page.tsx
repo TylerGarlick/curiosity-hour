@@ -243,7 +243,7 @@ export default function Home() {
     });
   };
 
-  // Car Mode view
+  // Car Mode view - auto-read always enabled for safety
   if (carMode && hasGames && activeGame) {
     return (
       <CarModeView
@@ -261,7 +261,7 @@ export default function Home() {
         }}
         onStop={() => setCarMode(false)}
         disabled={availableQuestions.length === 0}
-        autoTts={appSettings.autoTts}
+        autoTts={true} // Car Mode always has auto-read enabled for safety
       />
     );
   }
@@ -402,7 +402,7 @@ export default function Home() {
         <div className="flex-1 flex items-center justify-center p-4">
           <QuestionCard 
             question={currentQuestion || null} 
-            autoTts={appSettings.autoTts}
+            autoTts={appSettings.globalAutoRead}
             autoAdvanceDelayMs={appSettings.autoAdvanceDelayMs}
             onAutoAdvance={handleMarkAnswered}
           />

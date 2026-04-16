@@ -94,23 +94,26 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
                 <button
                   key={m}
                   onClick={() => setMode(m)}
-                  className={`flex-1 py-3 rounded-xl font-semibold transition-all active:scale-95 capitalize relative ${
+                  className={`flex-1 py-3 rounded-xl font-semibold transition-all active:scale-95 capitalize relative border-2 ${
                     mode === m
-                      ? "bg-accent text-white shadow-md shadow-accent/25 ring-2 ring-accent ring-offset-2 ring-offset-surface"
-                      : "bg-track text-text-primary border border-border hover:border-accent/50"
+                      ? "bg-accent text-white shadow-lg shadow-accent/40 border-accent ring-2 ring-accent/50 ring-offset-2 ring-offset-surface"
+                      : "bg-track text-text-primary border-border/60 hover:border-accent/70 hover:bg-accent/5"
                   }`}
                 >
-                  {m}
-                  {mode === m && (
-                    <span className="absolute -top-1 -right-1 bg-white text-accent rounded-full p-0.5 shadow-sm">
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="flex items-center justify-center gap-2">
+                    {mode === m && (
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                    </span>
-                  )}
+                    )}
+                    {m}
+                  </div>
                 </button>
               ))}
             </div>
+            <p className="text-xs text-text-secondary mt-2">
+              {mode === "partner" ? "💕 Intimate questions for couples" : "👯 Fun questions for friends"}
+            </p>
           </div>
 
           <button

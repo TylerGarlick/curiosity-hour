@@ -6,12 +6,14 @@ export interface AppSettings {
   autoTts: boolean;
   autoAdvanceDelayMs: number;
   tierMode: "basic" | "pro";
+  globalAutoRead: boolean;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
   autoTts: false,
   autoAdvanceDelayMs: 1500,
   tierMode: "pro",
+  globalAutoRead: false,
 };
 
 export function useSettings() {

@@ -53,8 +53,8 @@ export function QuestionCard({
 
   if (!question) {
     return (
-      <div className="bg-surface rounded-3xl border border-border p-8 text-center w-full max-w-md mx-auto">
-        <p className="text-lg text-text-secondary">
+      <div className="card-style card-texture p-8 text-center w-full max-w-md mx-auto">
+        <p className="text-lg text-text-primary font-medium">
           No more questions available!
         </p>
         <p className="text-sm text-text-secondary mt-2 opacity-70">
@@ -65,10 +65,10 @@ export function QuestionCard({
   }
 
   return (
-    <div className="bg-surface rounded-3xl border border-border p-6 sm:p-8 w-full max-w-md mx-auto min-h-48 flex flex-col items-center justify-center shadow-sm relative">
+    <div className="card-style card-texture p-6 sm:p-8 w-full max-w-md mx-auto min-h-48 flex flex-col items-center justify-center relative">
       <button
         onClick={handleSpeak}
-        className="absolute top-4 right-4 p-3 rounded-full bg-track hover:bg-border transition-colors touch-manipulation"
+        className="absolute top-4 right-4 p-3 rounded-full bg-track/80 hover:bg-border transition-all touch-manipulation shadow-md hover:shadow-lg active:scale-95"
         aria-label={isSpeaking ? "Stop reading" : "Read aloud"}
       >
         {isSpeaking ? (
@@ -82,7 +82,7 @@ export function QuestionCard({
           </svg>
         )}
       </button>
-      <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-text-primary text-center leading-relaxed">
+      <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-text-primary text-center leading-relaxed">
         {question.text}
       </h2>
     </div>

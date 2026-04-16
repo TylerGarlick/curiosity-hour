@@ -93,7 +93,7 @@ describe("CarModeView TTS Integration", () => {
       <CarModeView
         question={mockQuestion}
         {...mockHandlers}
-        autoTts={true}
+        autoTts={true} // Car Mode always has auto-read enabled
       />
     );
 
@@ -241,6 +241,31 @@ describe("CarModeView TTS Integration", () => {
     expect(screen.getByLabelText("Next Question")).toBeInTheDocument();
     expect(screen.getByLabelText("Repeat Question")).toBeInTheDocument();
     expect(screen.getByLabelText("Stop Car Mode")).toBeInTheDocument();
+  });
+
+  it("should always enable auto-read in Car Mode for safety", () => {
+    // Car Mode should always have auto-read enabled regardless of user preference
+    // This is a safety feature for hands-free operation while driving
+    const { rerender } = render(
+      <CarModeView
+        question={mockQuestion}
+        {...mockHandlers}
+        autoTts={true} // Always true in Car Mode
+      />
+    );
+
+    expect(mockSpeak).toHaveBeenCalledWith(mockQuestion.text);
+
+    // Even if we try to disable it, Car Mode should keep it on
+    rerender(
+      <CarModeView
+        question={mockQuestion}
+        {...mockHandlers}
+        autoTts={true} // Car Mode forces this to true
+      />
+    );
+
+    expect(mockSpeak).toHaveBeenCalledTimes(2);
   });
 
   it("should use high contrast styling for driving safety", () => {
