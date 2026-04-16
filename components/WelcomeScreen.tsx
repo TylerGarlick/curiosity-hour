@@ -36,7 +36,7 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-4 pb-safe">
       <div className="w-full max-w-md">
-        <div className="bg-surface rounded-3xl shadow-lg border border-border p-6">
+        <div className="card-style-elevated card-texture p-6">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-text-primary mb-2">
               🎯 Curiosity Hour
@@ -53,10 +53,10 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
                 <button
                   key={count}
                   onClick={() => handlePlayerCountChange(count)}
-                  className={`flex-1 py-3 rounded-xl font-semibold transition-all active:scale-95 touch-manipulation ${
+                  className={`flex-1 py-3 rounded-xl font-semibold transition-all active:scale-95 touch-manipulation shadow-sm ${
                     playerCount === count
                       ? "bg-accent text-white shadow-md shadow-accent/25"
-                      : "bg-track text-text-primary border border-border"
+                      : "bg-track text-text-primary border border-border/80 hover:border-accent/50"
                   }`}
                 >
                   {count}
@@ -79,7 +79,7 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
                     value={names[i] || ""}
                     onChange={(e) => handleNameChange(i, e.target.value)}
                     placeholder={`Player ${i + 1}`}
-                    className="w-full px-4 py-4 border border-border rounded-xl bg-bg text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent text-base"
+                    className="w-full px-4 py-4 border border-border/80 rounded-xl bg-bg text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent text-base shadow-sm transition-all"
                   />
                 ))}
             </div>
@@ -119,10 +119,10 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
           <button
             onClick={handleStart}
             disabled={!allNamesFilled}
-            className={`w-full py-4 rounded-xl font-bold text-lg transition-all active:scale-95 touch-manipulation ${
+            className={`w-full py-4 rounded-xl font-bold text-lg transition-all active:scale-95 touch-manipulation shadow-lg ${
               allNamesFilled
-                ? "bg-accent hover:bg-accent-hover text-white shadow-lg shadow-accent/25 cursor-pointer"
-                : "bg-track text-text-secondary cursor-not-allowed"
+                ? "bg-accent hover:bg-accent-hover text-white shadow-accent/25 cursor-pointer"
+                : "bg-track text-text-secondary cursor-not-allowed shadow-none"
             }`}
           >
             🎮 Start Game
@@ -131,13 +131,13 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
 
         {/* Pro upgrade prompt for free users */}
         {!isPro && onUpgrade && (
-          <div className="mt-6 p-4 bg-accent/10 rounded-xl border border-accent/20">
+          <div className="mt-6 p-4 card-style">
             <p className="text-sm text-text-secondary text-center mb-2">
               ⭐ Support the app and remove ads
             </p>
             <button
               onClick={onUpgrade}
-              className="w-full py-2 bg-accent text-accent-foreground rounded-lg font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+              className="w-full py-2 bg-accent text-accent-foreground rounded-lg font-medium text-sm hover:opacity-90 transition-all active:scale-95 touch-manipulation shadow-md"
             >
               💎 Go Pro — $2.99
             </button>

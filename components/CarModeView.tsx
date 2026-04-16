@@ -97,7 +97,7 @@ export function CarModeView({
       >
         <button
           onClick={handleThemeCycle}
-          className="group flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-all duration-300 active:scale-95 touch-manipulation"
+          className="group flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/15 transition-all duration-300 active:scale-95 touch-manipulation shadow-lg"
           title="Triple-tap to change theme"
           aria-label="Curiosity Hour - Tap to change theme"
         >
@@ -120,13 +120,13 @@ export function CarModeView({
         </button>
       </header>
 
-      {/* Question Card - Enhanced with smooth entrance and glow effect */}
+      {/* Question Card - Enhanced with card-style aesthetic */}
       <div 
         className="flex-1 flex items-center justify-center mb-8 animate-scaleIn"
         style={{ animationDelay: "150ms" }}
       >
         <div 
-          className={`w-full max-w-3xl bg-zinc-900/90 backdrop-blur-md border-2 border-${accentColor}/50 rounded-[2.5rem] p-10 sm:p-14 text-center shadow-2xl shadow-${accentColor}/20 transition-all duration-500 ${
+          className={`w-full max-w-3xl card-style-elevated card-texture p-10 sm:p-14 text-center transition-all duration-500 ${
             isTransitioning ? "scale-95 opacity-80" : "scale-100 opacity-100"
           }`}
         >
