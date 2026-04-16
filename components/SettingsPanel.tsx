@@ -13,9 +13,9 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   if (!isOpen || !isClient) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div 
-        className="bg-surface rounded-2xl border border-border p-6 w-full max-w-md shadow-lg"
+        className="bg-surface/95 backdrop-blur-md rounded-2xl border border-border/50 p-6 w-full max-w-md shadow-2xl shadow-black/30"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">

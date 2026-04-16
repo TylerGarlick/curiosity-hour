@@ -94,13 +94,20 @@ export function WelcomeScreen({ onStartGame, isPro, onUpgrade }: WelcomeScreenPr
                 <button
                   key={m}
                   onClick={() => setMode(m)}
-                  className={`flex-1 py-3 rounded-xl font-semibold transition-all active:scale-95 capitalize ${
+                  className={`flex-1 py-3 rounded-xl font-semibold transition-all active:scale-95 capitalize relative ${
                     mode === m
-                      ? "bg-accent text-white shadow-md shadow-accent/25"
-                      : "bg-track text-text-primary border border-border"
+                      ? "bg-accent text-white shadow-md shadow-accent/25 ring-2 ring-accent ring-offset-2 ring-offset-surface"
+                      : "bg-track text-text-primary border border-border hover:border-accent/50"
                   }`}
                 >
                   {m}
+                  {mode === m && (
+                    <span className="absolute -top-1 -right-1 bg-white text-accent rounded-full p-0.5 shadow-sm">
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
