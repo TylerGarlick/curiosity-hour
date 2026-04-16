@@ -230,6 +230,7 @@ export default function Home() {
         }}
         onStop={() => setCarMode(false)}
         disabled={availableQuestions.length === 0}
+        autoTts={appSettings.autoTts}
       />
     );
   }

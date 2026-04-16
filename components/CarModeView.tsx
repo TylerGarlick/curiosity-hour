@@ -1,6 +1,8 @@
 "use client";
 
 import { Question } from "@/types";
+import { useTTS } from "@/hooks/useTTS";
+import { useEffect } from "react";
 
 interface CarModeViewProps {
   question: Question | null;
@@ -8,6 +10,7 @@ interface CarModeViewProps {
   onPrevious: () => void;
   onStop: () => void;
   disabled?: boolean;
+  autoTts?: boolean;
 }
 
 export function CarModeView({
@@ -16,7 +19,31 @@ export function CarModeView({
   onPrevious,
   onStop,
   disabled = false,
+  autoTts = false,
 }: CarModeViewProps) {
+  const { isSpeaking, speak, cancel, autoSpeak } = useTTS({
+    autoTts,
+    autoAdvanceDelayMs: 0, // No auto-advance in car mode
+  });
+
+  // Auto-speak when question changes
+  useEffect(() => {
+    if (question?.text && autoTts) {
+      autoSpeak(question.text);
+    }
+    // Cancel speech when question changes or component unmounts
+    return () => {
+      cancel();
+    };
+  }, [question?.text, autoTts, autoSpeak, cancel]);
+
+  // Handle repeat speech
+  const handleRepeat = () => {
+    if (question?.text) {
+      cancel(); // Cancel any ongoing speech first
+      speak(question.text);
+    }
+  };
   return (
     <div className="min-h-screen bg-black text-white flex flex-col p-4 sm:p-6">
       {/* Header */}
@@ -77,8 +104,26 @@ export function CarModeView({
         </button>
 
         <button
+          onClick={handleRepeat}
+          disabled={!question}
+          className={`py-8 px-6 rounded-2xl font-bold text-2xl transition-all active:scale-95 touch-manipulation ${
+            !question
+              ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
+              : isSpeaking
+                ? "bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-600/30"
+                : "bg-zinc-700 hover:bg-zinc-600 text-white"
+          }`}
+          aria-label="Repeat Question"
+        >
+          {isSpeaking ? "🔊 Speaking..." : "🔁 Repeat"}
+        </button>
+      </div>
+
+      {/* Stop button moved to separate row for better layout */}
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 mt-4">
+        <button
           onClick={onStop}
-          className="py-8 px-6 rounded-2xl font-bold text-2xl bg-zinc-700 hover:bg-zinc-600 text-white transition-all active:scale-95 touch-manipulation"
+          className="py-8 px-6 rounded-2xl font-bold text-2xl bg-red-600 hover:bg-red-700 text-white transition-all active:scale-95 touch-manipulation"
           aria-label="Stop Car Mode"
         >
           ⏹ Stop
