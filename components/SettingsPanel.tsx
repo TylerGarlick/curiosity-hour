@@ -32,6 +32,33 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         </div>
 
         <div className="space-y-6">
+          {/* Tier Mode Toggle */}
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-text-primary font-medium">Mode</label>
+              <p className="text-sm text-text-secondary mt-1">
+                Basic: 200 curated questions, no ads
+              </p>
+            </div>
+            <button
+              onClick={() => updateSettings({ tierMode: settings.tierMode === "basic" ? "pro" : "basic" })}
+              className={`relative w-12 h-6 rounded-full transition-colors ${
+                settings.tierMode === "pro" ? "bg-accent" : "bg-track"
+              }`}
+              role="switch"
+              aria-checked={settings.tierMode === "pro"}
+            >
+              <span
+                className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                  settings.tierMode === "pro" ? "left-7" : "left-1"
+                }`}
+              />
+            </button>
+          </div>
+          <div className="text-xs text-text-secondary">
+            {settings.tierMode === "basic" ? "🟢 Basic (200 questions)" : "⭐ Pro (All questions + features)"}
+          </div>
+
           {/* Auto-TTS Toggle */}
           <div className="flex items-center justify-between">
             <div>

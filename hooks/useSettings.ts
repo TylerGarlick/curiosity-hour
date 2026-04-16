@@ -5,11 +5,13 @@ import { useState, useEffect } from "react";
 export interface AppSettings {
   autoTts: boolean;
   autoAdvanceDelayMs: number;
+  tierMode: "basic" | "pro";
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
   autoTts: false,
   autoAdvanceDelayMs: 1500,
+  tierMode: "pro",
 };
 
 export function useSettings() {

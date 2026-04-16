@@ -125,3 +125,24 @@ export function getAvailableCategories(
 
   return allCategories;
 }
+
+/**
+ * Filter questions based on tier mode.
+ * Basic mode: Returns first 200 curated questions (general, funny, would-you-rather, deep)
+ * Pro mode: Returns all questions
+ */
+export function filterQuestionsByTier(
+  questions: Question[],
+  tierMode: "basic" | "pro"
+): Question[] {
+  if (tierMode === "pro") {
+    return questions;
+  }
+
+  // Basic mode: curated subset of 200 questions
+  const curatedCategories: Category[] = ["general", "funny", "would-you-rather", "deep"];
+  const curated = questions.filter((q) => curatedCategories.includes(q.category));
+  
+  // Return first 200, shuffled for variety
+  return fisherYatesShuffle(curated).slice(0, 200);
+}

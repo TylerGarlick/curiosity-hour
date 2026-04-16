@@ -18,7 +18,7 @@ import { ResetDialog } from "@/components/ResetDialog";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { ResumeGameModal } from "@/components/ResumeGameModal";
-import { MiniAdBanner } from "@/components/AdBanner";
+import { AdBanner } from "@/components/AdBanner";
 import { ProUpgradeModal, ProButton } from "@/components/ProUpgradeModal";
 import { getAllQuestions } from "@/lib/questions";
 import { getAvailableQuestions, getAvailableQuestionsSorted, initializeShuffledQuestions, getNextQuestionFromShuffled, advanceQuestionIndex, filterQuestionsByTier } from "@/lib/game";
@@ -466,9 +466,9 @@ export default function Home() {
         </button>
       </main>
 
-      {/* Ad banner for free users */}
-      {!isPro && (
-        <MiniAdBanner onUpgrade={() => setUpgradeModalOpen(true)} />
+      {/* Ad banner for free users in basic mode */}
+      {appSettings.tierMode === "basic" && !isPro && (
+        <AdBanner onUpgrade={() => setUpgradeModalOpen(true)} />
       )}
 
       {/* Dialogs */}

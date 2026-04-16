@@ -6,8 +6,8 @@ interface AdBannerProps {
 
 export function AdBanner({ onUpgrade }: AdBannerProps) {
   return (
-    <div className="bg-surface border-t border-border px-4 py-3">
-      <div className="flex items-center justify-between gap-3">
+    <div className="fixed bottom-0 left-0 right-0 bg-surface border-t border-border px-4 py-3 z-40">
+      <div className="flex items-center justify-between gap-3 max-w-lg mx-auto">
         {/* Ad placeholder - in production this would be Google AdMob or similar */}
         <div className="flex-1 bg-track rounded-lg px-3 py-2 text-center">
           <span className="text-xs text-text-secondary">Advertisement</span>
@@ -16,7 +16,7 @@ export function AdBanner({ onUpgrade }: AdBannerProps) {
         {/* Upgrade prompt */}
         <button
           onClick={onUpgrade}
-          className="shrink-0 bg-accent text-accent-foreground px-3 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+          className="shrink-0 bg-accent text-accent-foreground px-3 py-2 rounded-lg text-sm font-medium hover:bg-accent/90 transition-opacity"
         >
           Go Pro
         </button>

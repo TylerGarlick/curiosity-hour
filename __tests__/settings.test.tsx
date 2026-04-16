@@ -30,6 +30,8 @@ describe("useSettings", () => {
   beforeEach(() => {
     localStorageMock.clear();
     jest.clearAllMocks();
+    localStorageMock.getItem.mockReset();
+    localStorageMock.getItem.mockReturnValue(null);
   });
 
   it("should return default settings when no settings exist in localStorage", () => {
@@ -38,6 +40,7 @@ describe("useSettings", () => {
     expect(result.current.settings).toEqual({
       autoTts: false,
       autoAdvanceDelayMs: 1500,
+      tierMode: "pro",
     });
   });
 
@@ -45,6 +48,7 @@ describe("useSettings", () => {
     const savedSettings = {
       autoTts: true,
       autoAdvanceDelayMs: 2000,
+      tierMode: "basic",
     };
     localStorageMock.getItem.mockReturnValue(JSON.stringify(savedSettings));
 
@@ -68,6 +72,7 @@ describe("useSettings", () => {
       JSON.stringify({
         autoTts: true,
         autoAdvanceDelayMs: 1500,
+        tierMode: "pro",
       })
     );
     expect(result.current.settings.autoTts).toBe(true);
@@ -88,6 +93,7 @@ describe("useSettings", () => {
       JSON.stringify({
         autoTts: true,
         autoAdvanceDelayMs: 3000,
+        tierMode: "pro",
       })
     );
   });
@@ -96,6 +102,7 @@ describe("useSettings", () => {
     const initialSettings = {
       autoTts: false,
       autoAdvanceDelayMs: 1500,
+      tierMode: "basic",
     };
     localStorageMock.getItem.mockReturnValue(JSON.stringify(initialSettings));
 
@@ -108,6 +115,7 @@ describe("useSettings", () => {
     expect(result.current.settings).toEqual({
       autoTts: true,
       autoAdvanceDelayMs: 1500,
+      tierMode: "basic",
     });
   });
 
@@ -122,6 +130,7 @@ describe("useSettings", () => {
     expect(result.current.settings).toEqual({
       autoTts: false,
       autoAdvanceDelayMs: 1500,
+      tierMode: "pro",
     });
   });
 
