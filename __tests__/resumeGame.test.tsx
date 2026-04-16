@@ -390,6 +390,80 @@ describe("ResumeGameModal", () => {
   });
 });
 
+describe("ResumeGameModal Z-Index & Layering", () => {
+  const mockGames: GameSession[] = [
+    {
+      id: "game_1",
+      playerNames: ["Alice", "Bob"],
+      relationshipMode: "partner",
+      answeredIds: ["q1", "q2", "q3"],
+      skippedIds: [],
+      currentId: "q5",
+      activeCategories: "all",
+      createdAt: Date.now(),
+      shuffledQuestionIds: ["q1", "q2", "q3", "q5", "q6"],
+      questionIndex: 3,
+    },
+  ];
+
+  const mockOnClose = jest.fn();
+  const mockOnResumeGame = jest.fn();
+  const mockOnDeleteGame = jest.fn();
+
+  it("should have z-index [9999] to appear above all UI elements", () => {
+    const { container } = render(
+      <ResumeGameModal
+        isOpen={true}
+        onClose={mockOnClose}
+        games={mockGames}
+        activeGameId="game_1"
+        onResumeGame={mockOnResumeGame}
+        onDeleteGame={mockOnDeleteGame}
+      />
+    );
+
+    // Find the backdrop div (first child with fixed positioning)
+    const backdrop = container.firstChild as HTMLElement;
+    expect(backdrop).toBeInTheDocument();
+    expect(backdrop.className).toContain("z-[9999]");
+  });
+
+  it("should have backdrop with proper overlay styling", () => {
+    const { container } = render(
+      <ResumeGameModal
+        isOpen={true}
+        onClose={mockOnClose}
+        games={mockGames}
+        activeGameId="game_1"
+        onResumeGame={mockOnResumeGame}
+        onDeleteGame={mockOnDeleteGame}
+      />
+    );
+
+    const backdrop = container.firstChild as HTMLElement;
+    expect(backdrop.className).toContain("fixed inset-0");
+    expect(backdrop.className).toContain("bg-black/40");
+    expect(backdrop.className).toContain("backdrop-blur-sm");
+  });
+
+  it("should render modal content above backdrop", () => {
+    render(
+      <ResumeGameModal
+        isOpen={true}
+        onClose={mockOnClose}
+        games={mockGames}
+        activeGameId="game_1"
+        onResumeGame={mockOnResumeGame}
+        onDeleteGame={mockOnDeleteGame}
+      />
+    );
+
+    // Modal content should be visible
+    expect(screen.getByText("📋 Saved Sessions")).toBeInTheDocument();
+    expect(screen.getByText("Alice & Bob")).toBeInTheDocument();
+  });
+});
+
 describe("Session State Persistence", () => {
   it("saves game state to localStorage", () => {
     const gameSession: GameSession = {

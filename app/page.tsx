@@ -301,6 +301,7 @@ export default function Home() {
             );
 
             setAppState(updatedState);
+            setResumeModalOpen(false); // Close resume modal when starting new game
           }}
         />
         {/* Cog Wheel Button - Fixed Bottom Right (only on startup screen with saved games) */}

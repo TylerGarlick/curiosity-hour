@@ -181,3 +181,35 @@ describe("WelcomeScreen Accessibility", () => {
     expect(partnerButton).toHaveClass("py-3");
   });
 });
+
+describe("WelcomeScreen State Management", () => {
+  const mockOnStartGame = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should call onStartGame with correct parameters when starting new game", () => {
+    render(<WelcomeScreen onStartGame={mockOnStartGame} isPro={true} />);
+    const input1 = screen.getByPlaceholderText("Player 1");
+    const input2 = screen.getByPlaceholderText("Player 2");
+    fireEvent.change(input1, { target: { value: "Alice" } });
+    fireEvent.change(input2, { target: { value: "Bob" } });
+    const startButton = screen.getByText("🎮 Start Game");
+    fireEvent.click(startButton);
+    expect(mockOnStartGame).toHaveBeenCalledWith(["Alice", "Bob"], "partner");
+  });
+
+  it("should allow starting game in friend mode", () => {
+    render(<WelcomeScreen onStartGame={mockOnStartGame} isPro={true} />);
+    const input1 = screen.getByPlaceholderText("Player 1");
+    const input2 = screen.getByPlaceholderText("Player 2");
+    fireEvent.change(input1, { target: { value: "Alice" } });
+    fireEvent.change(input2, { target: { value: "Bob" } });
+    const friendButton = screen.getByRole("button", { name: /friend/i });
+    fireEvent.click(friendButton);
+    const startButton = screen.getByText("🎮 Start Game");
+    fireEvent.click(startButton);
+    expect(mockOnStartGame).toHaveBeenCalledWith(["Alice", "Bob"], "friend");
+  });
+});
