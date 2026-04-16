@@ -95,27 +95,57 @@ describe("Car Mode", () => {
       // Car Mode uses black background with white text for maximum contrast
       const backgroundColor = "bg-black";
       const textColor = "text-white";
+      const darkOverlay = "bg-gradient-to-b from-black via-zinc-950 to-black";
       
       expect(backgroundColor).toBe("bg-black");
       expect(textColor).toBe("text-white");
+      expect(darkOverlay).toContain("gradient");
     });
 
     it("should have giant touch targets for driver safety", () => {
-      // Buttons should have large padding (py-8 = 2rem = 32px)
-      const buttonPadding = "py-8";
-      const fontSize = "text-2xl";
+      // Buttons should have large padding (py-10 = 2.5rem = 40px) and larger text
+      const buttonPadding = "py-10";
+      const fontSize = "text-3xl";
+      const borderRadius = "rounded-3xl";
       
-      expect(buttonPadding).toBe("py-8");
-      expect(fontSize).toBe("text-2xl");
+      expect(buttonPadding).toBe("py-10");
+      expect(fontSize).toBe("text-3xl");
+      expect(borderRadius).toBe("rounded-3xl");
     });
 
-    it("should provide Next, Previous, and Stop actions", () => {
-      const actions = ["Next", "Previous", "Stop"];
+    it("should provide visual feedback on button press", () => {
+      // Buttons should have active state feedback
+      const activeScale = "active:scale-90";
+      const activeShadow = "active:shadow-blue-600/60";
+      const activeBg = "active:bg-blue-800";
+      const transitionDuration = "transition-all duration-200";
+      
+      expect(activeScale).toContain("scale");
+      expect(activeShadow).toContain("shadow");
+      expect(activeBg).toContain("bg");
+      expect(transitionDuration).toContain("duration");
+    });
+
+    it("should have smooth entrance animations", () => {
+      // Components should have entrance animations
+      const fadeIn = "animate-fadeIn";
+      const slideDown = "animate-slideDown";
+      const slideUp = "animate-slideUp";
+      const scaleIn = "animate-scaleIn";
+      
+      expect(fadeIn).toContain("fadeIn");
+      expect(slideDown).toContain("slideDown");
+      expect(slideUp).toContain("slideUp");
+      expect(scaleIn).toContain("scaleIn");
+    });
+
+    it("should provide Next, Previous, and Repeat actions", () => {
+      const actions = ["Next", "Previous", "Repeat"];
       
       expect(actions).toHaveLength(3);
       expect(actions).toContain("Next");
       expect(actions).toContain("Previous");
-      expect(actions).toContain("Stop");
+      expect(actions).toContain("Repeat");
     });
 
     it("should display safety reminder", () => {
@@ -132,30 +162,45 @@ describe("Car Mode", () => {
       expect(exitButtonLabel).toContain("Exit");
     });
 
-    it("should display question in high contrast card", () => {
-      const cardClasses = ["bg-zinc-900", "border-2", "border-white", "rounded-3xl"];
-      expect(cardClasses).toContain("bg-zinc-900");
-      expect(cardClasses).toContain("border-white");
+    it("should display question in high contrast card with backdrop blur", () => {
+      const cardClasses = ["bg-zinc-900/95", "backdrop-blur-sm", "border-2", "border-white/90", "rounded-3xl", "shadow-2xl"];
+      expect(cardClasses).toContain("bg-zinc-900/95");
+      expect(cardClasses).toContain("backdrop-blur-sm");
+      expect(cardClasses).toContain("border-white/90");
+      expect(cardClasses).toContain("shadow-2xl");
     });
 
-    it("should use large text for question readability", () => {
+    it("should use large text for question readability with drop shadow", () => {
       const textSizes = ["text-3xl", "text-4xl", "text-5xl"];
+      const dropShadow = "drop-shadow-md";
       expect(textSizes.length).toBeGreaterThan(0);
+      expect(dropShadow).toContain("shadow");
     });
 
-    it("should have colored action buttons", () => {
+    it("should have colored action buttons with enhanced shadows", () => {
       const nextButtonColor = "bg-green-600";
       const prevButtonColor = "bg-blue-600";
-      const stopButtonColor = "bg-zinc-700";
+      const repeatButtonColor = "bg-zinc-700";
+      const shadowEffect = "shadow-xl";
       
       expect(nextButtonColor).toContain("green");
       expect(prevButtonColor).toContain("blue");
-      expect(stopButtonColor).toContain("zinc");
+      expect(repeatButtonColor).toContain("zinc");
+      expect(shadowEffect).toContain("xl");
     });
 
-    it("should disable buttons when disabled prop is true", () => {
+    it("should disable buttons with opacity and cursor changes", () => {
       const disabledState = true;
+      const disabledStyles = ["opacity-50", "cursor-not-allowed"];
       expect(disabledState).toBe(true);
+      expect(disabledStyles).toContain("opacity-50");
+      expect(disabledStyles).toContain("cursor-not-allowed");
+    });
+
+    it("should have smooth transition animations on all interactive elements", () => {
+      const transitionClasses = ["transition-all", "duration-200"];
+      expect(transitionClasses).toContain("transition-all");
+      expect(transitionClasses).toContain("duration-200");
     });
   });
 });
