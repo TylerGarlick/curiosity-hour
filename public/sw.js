@@ -66,19 +66,24 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Determine caching strategy based on request type
-  if (isStaticAsset(url)) {
-    // Cache-first for static assets
-    event.respondWith(cacheFirst(request));
-  } else if (request.destination === 'image') {
-    // Cache-first for images
-    event.respondWith(cacheFirst(request));
-  } else if (request.mode === 'navigate') {
-    // Network-first for navigation (HTML pages)
-    event.respondWith(networkFirst(request));
-  } else {
-    // Stale-while-revalidate for other assets (CSS, JS, fonts)
-    // Note: Question data is bundled in JS at build time
-    event.respondWith(staleWhileRevalidate(request));
+  try {
+    if (isStaticAsset(url)) {
+      // Cache-first for static assets
+      event.respondWith(cacheFirst(request));
+    } else if (request.destination === 'image') {
+      // Cache-first for images
+      event.respondWith(cacheFirst(request));
+    } else if (request.mode === 'navigate') {
+      // Network-first for navigation (HTML pages) - don't cache HTML
+      event.respondWith(networkFirst(request));
+    } else {
+      // Stale-while-revalidate for other assets (CSS, JS, fonts)
+      // Note: Question data is bundled in JS at build time
+      event.respondWith(staleWhileRevalidate(request));
+    }
+  } catch (error) {
+    console.error('[SW] Fetch handler error:', error);
+    // Fail gracefully - let the browser handle the request normally
   }
 });
 
@@ -114,10 +119,15 @@ async function cacheFirst(request: Request): Promise<Response> {
   }
 }
 
-// Network-First Strategy: Fresh content when online
+// Network-First Strategy: Fresh content when online (don't cache HTML navigations)
 async function networkFirst(request: Request): Promise<Response> {
   try {
     const response = await fetch(request);
+    // Don't cache HTML navigation responses - always fetch fresh
+    // This prevents stale HTML from breaking interactive elements
+    if (request.mode === 'navigate') {
+      return response;
+    }
     if (response.ok) {
       const cache = await caches.open(CACHE_NAME);
       cache.put(request, response.clone());
