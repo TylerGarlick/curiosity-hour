@@ -269,39 +269,70 @@ export default function Home() {
   // Welcome screen
   if (!hasGames || !activeGame) {
     return (
-      <WelcomeScreen
-        onStartGame={(names, mode) => {
-          const newGame: GameSession = {
-            id: `game_${Date.now()}`,
-            playerNames: names,
-            relationshipMode: mode,
-            answeredIds: [],
-            skippedIds: [],
-            currentId: null,
-            activeCategories: "all",
-            createdAt: Date.now(),
-          };
+      <>
+        <WelcomeScreen
+          onStartGame={(names, mode) => {
+            const newGame: GameSession = {
+              id: `game_${Date.now()}`,
+              playerNames: names,
+              relationshipMode: mode,
+              answeredIds: [],
+              skippedIds: [],
+              currentId: null,
+              activeCategories: "all",
+              createdAt: Date.now(),
+            };
 
-          const updatedState = {
-            ...appState,
-            activeGameId: newGame.id,
-            games: [...appState.games, newGame],
-          };
+            const updatedState = {
+              ...appState,
+              activeGameId: newGame.id,
+              games: [...appState.games, newGame],
+            };
 
-          // Initialize shuffled questions and pick first
-          const allQuestionsFiltered = getAllQuestions(appState.customQuestions);
-          const shuffledGame = initializeShuffledQuestions(newGame, allQuestionsFiltered);
-          const firstQuestionId = getNextQuestionFromShuffled(shuffledGame);
-          shuffledGame.currentId = firstQuestionId;
+            // Initialize shuffled questions and pick first
+            const allQuestionsFiltered = getAllQuestions(appState.customQuestions);
+            const shuffledGame = initializeShuffledQuestions(newGame, allQuestionsFiltered);
+            const firstQuestionId = getNextQuestionFromShuffled(shuffledGame);
+            shuffledGame.currentId = firstQuestionId;
 
-          // Update the game in the state
-          updatedState.games = updatedState.games.map((g) =>
-            g.id === newGame.id ? shuffledGame : g
-          );
+            // Update the game in the state
+            updatedState.games = updatedState.games.map((g) =>
+              g.id === newGame.id ? shuffledGame : g
+            );
 
-          setAppState(updatedState);
-        }}
-      />
+            setAppState(updatedState);
+          }}
+        />
+        {/* Cog Wheel Button - Fixed Bottom Right (only on startup screen with saved games) */}
+        {hasGames && (
+          <button
+            onClick={() => setResumeModalOpen(true)}
+            className="fixed bottom-6 right-6 w-12 h-12 bg-surface border border-border rounded-full shadow-lg hover:bg-track transition-all hover:scale-110 active:scale-95 z-40 flex items-center justify-center group"
+            title="Saved Sessions"
+            aria-label="Open saved sessions"
+          >
+            <svg 
+              className="w-6 h-6 text-text-secondary group-hover:text-text-primary transition-colors" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={1.5} 
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" 
+              />
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={1.5} 
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" 
+              />
+            </svg>
+          </button>
+        )}
+      </>
     );
   }
 
@@ -310,7 +341,14 @@ export default function Home() {
     <div className="min-h-screen bg-bg flex flex-col">
       {/* Simple Header - compact for mobile */}
       <header className="bg-surface border-b border-border px-4 py-2 flex items-center justify-between sticky top-0 z-10">
-        <h1 className="text-base font-semibold text-text-primary">Curiosity Hour</h1>
+        <button
+          onClick={() => setAppState({ ...appState, activeGameId: null })}
+          className="text-base font-semibold text-text-primary hover:text-accent transition-colors cursor-pointer"
+          title="Back to Home"
+          aria-label="Back to Home"
+        >
+          🎯 Curiosity Hour
+        </button>
         <div className="flex items-center gap-2">
           {!isPro && (
             <button
@@ -437,33 +475,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Cog Wheel Button - Fixed Bottom Right */}
-        <button
-          onClick={() => setResumeModalOpen(true)}
-          className="fixed bottom-6 right-6 w-12 h-12 bg-surface border border-border rounded-full shadow-lg hover:bg-track transition-all hover:scale-110 active:scale-95 z-40 flex items-center justify-center group"
-          title="Saved Sessions"
-          aria-label="Open saved sessions"
-        >
-          <svg 
-            className="w-6 h-6 text-text-secondary group-hover:text-text-primary transition-colors" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={1.5} 
-              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" 
-            />
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={1.5} 
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" 
-            />
-          </svg>
-        </button>
+        {/* Cog Wheel Button - Hidden during gameplay (only shown on startup screen) */}
       </main>
 
       {/* Ad banner for free users in basic mode */}
