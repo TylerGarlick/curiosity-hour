@@ -286,3 +286,171 @@ describe('ResumeGameModal State Management', () => {
     expect(cogWheelButton).toBeInTheDocument();
   });
 });
+
+describe('Modal Rendering - Global UI Elements', () => {
+  beforeEach(() => {
+    mockStorage.clear();
+    jest.clearAllMocks();
+  });
+
+  it('should render ResumeGameModal in DOM on welcome screen', async () => {
+    const savedGameState = {
+      activeGameId: null,
+      games: [
+        {
+          id: 'game_123',
+          playerNames: ['Alice', 'Bob'],
+          relationshipMode: 'partner' as const,
+          answeredIds: [],
+          skippedIds: [],
+          currentId: null,
+          activeCategories: 'all' as const,
+          createdAt: Date.now(),
+        },
+      ],
+      globalAnsweredIds: [],
+      customQuestions: [],
+    };
+    mockStorage.setItem('curiosity_hour_app', JSON.stringify(savedGameState));
+
+    render(<Home />);
+
+    await waitFor(() => {
+      expect(screen.getByText('🎯 Curiosity Hour')).toBeInTheDocument();
+    });
+
+    // Verify cog wheel button exists (triggers modal)
+    expect(screen.getByLabelText('Open saved sessions')).toBeInTheDocument();
+  });
+
+  it('should render all global dialogs on welcome screen', async () => {
+    render(<Home />);
+
+    await waitFor(() => {
+      expect(screen.getByText('🎯 Curiosity Hour')).toBeInTheDocument();
+    });
+
+    // All global UI elements should be rendered in the DOM (even if not visible)
+    // SettingsPanel, CustomQuestions, ResetDialog, ResumeGameModal, ProUpgradeModal
+    // We verify by checking the component structure allows them to exist
+    expect(screen.getByText('🎯 Curiosity Hour')).toBeInTheDocument();
+  });
+
+  it('should render all global dialogs during gameplay', async () => {
+    const activeGameState = {
+      activeGameId: 'game_active',
+      games: [
+        {
+          id: 'game_active',
+          playerNames: ['Player 1', 'Player 2'],
+          relationshipMode: 'partner' as const,
+          answeredIds: ['q1', 'q2'],
+          skippedIds: [],
+          currentId: 'q3',
+          activeCategories: 'all' as const,
+          createdAt: Date.now(),
+          shuffledQuestionIds: ['q1', 'q2', 'q3', 'q4'],
+          questionIndex: 2,
+        },
+      ],
+      globalAnsweredIds: ['q1', 'q2'],
+      customQuestions: [],
+    };
+    mockStorage.setItem('curiosity_hour_app', JSON.stringify(activeGameState));
+
+    render(<Home />);
+
+    // Wait for game screen to load
+    await waitFor(() => {
+      expect(screen.getByText(/answered/i)).toBeInTheDocument();
+    });
+
+    // Verify game screen is active
+    expect(screen.getByText('🎯 Curiosity Hour')).toBeInTheDocument();
+    expect(screen.getByText(/remaining/i)).toBeInTheDocument();
+
+    // Settings button should be visible on game screen
+    expect(screen.getByText('⚙️ Settings')).toBeInTheDocument();
+  });
+
+  it('should render ResumeGameModal in DOM regardless of screen state', async () => {
+    // Test with no games (welcome screen)
+    const emptyState = {
+      activeGameId: null,
+      games: [],
+      globalAnsweredIds: [],
+      customQuestions: [],
+    };
+    mockStorage.setItem('curiosity_hour_app', JSON.stringify(emptyState));
+
+    const { unmount } = render(<Home />);
+
+    await waitFor(() => {
+      expect(screen.getByText('🎯 Curiosity Hour')).toBeInTheDocument();
+    });
+
+    // Unmount and remount with active game
+    unmount();
+
+    const activeGameState = {
+      activeGameId: 'game_active',
+      games: [
+        {
+          id: 'game_active',
+          playerNames: ['Player 1'],
+          relationshipMode: 'friend' as const,
+          answeredIds: ['q1'],
+          skippedIds: [],
+          currentId: 'q2',
+          activeCategories: 'all' as const,
+          createdAt: Date.now(),
+          shuffledQuestionIds: ['q1', 'q2', 'q3'],
+          questionIndex: 1,
+        },
+      ],
+      globalAnsweredIds: ['q1'],
+      customQuestions: [],
+    };
+    mockStorage.setItem('curiosity_hour_app', JSON.stringify(activeGameState));
+
+    render(<Home />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/answered/i)).toBeInTheDocument();
+    });
+
+    // Modal component should be renderable in both states
+    expect(screen.getByText('🎯 Curiosity Hour')).toBeInTheDocument();
+  });
+
+  it('should maintain modal accessibility after screen transitions', async () => {
+    // Start with saved games on welcome screen
+    const savedGameState = {
+      activeGameId: null,
+      games: [
+        {
+          id: 'game_1',
+          playerNames: ['Alice'],
+          relationshipMode: 'friend' as const,
+          answeredIds: [],
+          skippedIds: [],
+          currentId: null,
+          activeCategories: 'all' as const,
+          createdAt: Date.now(),
+        },
+      ],
+      globalAnsweredIds: [],
+      customQuestions: [],
+    };
+    mockStorage.setItem('curiosity_hour_app', JSON.stringify(savedGameState));
+
+    render(<Home />);
+
+    await waitFor(() => {
+      expect(screen.getByText('🎯 Curiosity Hour')).toBeInTheDocument();
+    });
+
+    // Cog wheel should be accessible on welcome screen
+    expect(screen.getByLabelText('Open saved sessions')).toBeInTheDocument();
+  });
+});

@@ -243,255 +243,255 @@ export default function Home() {
     });
   };
 
-  // Car Mode view - auto-read always enabled for safety
-  if (carMode && hasGames && activeGame) {
-    return (
-      <CarModeView
-        question={currentQuestion || null}
-        onNext={handleMarkAnswered}
-        onPrevious={() => {
-          // Go back to previous question (simplified: just pick a new random one from answered)
-          if (activeGame.answeredIds.length > 0) {
-            const prevQuestionId = activeGame.answeredIds[activeGame.answeredIds.length - 1];
-            const updatedGames = appState.games.map((g) =>
-              g.id === activeGame.id ? { ...g, currentId: prevQuestionId } : g
-            );
-            setAppState({ ...appState, games: updatedGames });
-          }
-        }}
-        onStop={() => setCarMode(false)}
-        disabled={availableQuestions.length === 0}
-        autoTts={true} // Car Mode always has auto-read enabled for safety
-      />
-    );
-  }
+  // Determine which screen to show
+  const isWelcomeScreen = !hasGames || !activeGame;
+  const isCarModeView = carMode && hasGames && activeGame;
 
-  // Welcome screen with slide-up drawer effect
-  if (!hasGames || !activeGame) {
-    return (
-      <>
-        {/* Main Welcome Screen Container - slides up when resume modal is open */}
-        <div
-          className={`min-h-screen bg-bg transition-transform duration-300 ease-in-out ${
-            resumeModalOpen ? 'translate-y-[-30%]' : 'translate-y-0'
-          }`}
-        >
-          <WelcomeScreen
-            onStartGame={(names, mode) => {
-              const newGame: GameSession = {
-                id: `game_${Date.now()}`,
-                playerNames: names,
-                relationshipMode: mode,
-                answeredIds: [],
-                skippedIds: [],
-                currentId: null,
-                activeCategories: "all",
-                createdAt: Date.now(),
-              };
-
-              const updatedState = {
-                ...appState,
-                activeGameId: newGame.id,
-                games: [...appState.games, newGame],
-              };
-
-              // Initialize shuffled questions and pick first
-              const allQuestionsFiltered = getAllQuestions(appState.customQuestions);
-              const shuffledGame = initializeShuffledQuestions(newGame, allQuestionsFiltered);
-              const firstQuestionId = getNextQuestionFromShuffled(shuffledGame);
-              shuffledGame.currentId = firstQuestionId;
-
-              // Update the game in the state
-              updatedState.games = updatedState.games.map((g) =>
-                g.id === newGame.id ? shuffledGame : g
-              );
-
-              setAppState(updatedState);
-              setResumeModalOpen(false); // Close resume modal when starting new game
-            }}
-          />
-        </div>
-        {/* Cog Wheel Button - Fixed Bottom Right (only on startup screen with saved games) */}
-        {hasGames && (
-          <button
-            onClick={() => setResumeModalOpen(true)}
-            className="fixed bottom-6 right-6 w-12 h-12 bg-surface border border-border rounded-full shadow-lg hover:bg-track transition-all hover:scale-110 active:scale-95 z-40 flex items-center justify-center group"
-            title="Saved Sessions"
-            aria-label="Open saved sessions"
-          >
-            <svg 
-              className="w-6 h-6 text-text-secondary group-hover:text-text-primary transition-colors" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={1.5} 
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" 
-              />
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={1.5} 
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" 
-              />
-            </svg>
-          </button>
-        )}
-      </>
-    );
-  }
-
-  // Game screen
   return (
-    <div className="min-h-screen bg-bg flex flex-col">
-      {/* Simple Header - compact for mobile */}
-      <header className="bg-surface border-b border-border px-4 py-2 flex items-center justify-between sticky top-0 z-10">
-        <button
-          onClick={() => setAppState({ ...appState, activeGameId: null })}
-          className="text-base font-semibold text-text-primary hover:text-accent transition-colors cursor-pointer"
-          title="Back to Home"
-          aria-label="Back to Home"
-        >
-          🎯 Curiosity Hour
-        </button>
-        <div className="flex items-center gap-2">
-          {!isPro && (
-            <button
-              onClick={() => setUpgradeModalOpen(true)}
-              className="inline-flex items-center gap-1 bg-accent/10 text-accent px-2 py-1 rounded-lg text-xs font-medium hover:bg-accent/20 transition-colors"
-            >
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-              </svg>
-              Pro
-            </button>
-          )}
-          {isPro && (
-            <span className="inline-flex items-center gap-1 text-accent text-xs font-medium">
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-              </svg>
-              Pro
-            </span>
-          )}
-          <GameSwitcher
-            games={appState.games}
-            activeGameId={appState.activeGameId}
-            onSelectGame={handleSelectGame}
-            onNewGame={handleNewGame}
-          />
-        </div>
-      </header>
+    <>
+      {/* Main Content Area - conditional rendering based on state */}
+      {isCarModeView ? (
+        <CarModeView
+          question={currentQuestion || null}
+          onNext={handleMarkAnswered}
+          onPrevious={() => {
+            // Go back to previous question (simplified: just pick a new random one from answered)
+            if (activeGame.answeredIds.length > 0) {
+              const prevQuestionId = activeGame.answeredIds[activeGame.answeredIds.length - 1];
+              const updatedGames = appState.games.map((g) =>
+                g.id === activeGame.id ? { ...g, currentId: prevQuestionId } : g
+              );
+              setAppState({ ...appState, games: updatedGames });
+            }
+          }}
+          onStop={() => setCarMode(false)}
+          disabled={availableQuestions.length === 0}
+          autoTts={true} // Car Mode always has auto-read enabled for safety
+        />
+      ) : isWelcomeScreen ? (
+        /* Welcome screen with slide-up drawer effect */
+        <>
+          {/* Main Welcome Screen Container - slides up when resume modal is open */}
+          <div
+            className={`min-h-screen bg-bg transition-transform duration-300 ease-in-out ${
+              resumeModalOpen ? 'translate-y-[-30%]' : 'translate-y-0'
+            }`}
+          >
+            <WelcomeScreen
+              onStartGame={(names, mode) => {
+                const newGame: GameSession = {
+                  id: `game_${Date.now()}`,
+                  playerNames: names,
+                  relationshipMode: mode,
+                  answeredIds: [],
+                  skippedIds: [],
+                  currentId: null,
+                  activeCategories: "all",
+                  createdAt: Date.now(),
+                };
 
-      {/* Main Content - mobile-first layout */}
-      <main className="flex-1 flex flex-col w-full">
-        {/* Progress indicator - minimal on mobile */}
-        <div className="px-4 pt-3">
-          <div className="flex items-center justify-between text-xs text-text-secondary mb-1">
-            <span>{activeGame.answeredIds.length} answered</span>
-            <span>{availableQuestions.length} remaining</span>
-          </div>
-          <div className="h-1.5 bg-track rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-accent transition-all duration-300"
-              style={{ 
-                width: `${availableQuestions.length + activeGame.answeredIds.length > 0 
-                  ? (activeGame.answeredIds.length / (availableQuestions.length + activeGame.answeredIds.length)) * 100 
-                  : 0}%` 
+                const updatedState = {
+                  ...appState,
+                  activeGameId: newGame.id,
+                  games: [...appState.games, newGame],
+                };
+
+                // Initialize shuffled questions and pick first
+                const allQuestionsFiltered = getAllQuestions(appState.customQuestions);
+                const shuffledGame = initializeShuffledQuestions(newGame, allQuestionsFiltered);
+                const firstQuestionId = getNextQuestionFromShuffled(shuffledGame);
+                shuffledGame.currentId = firstQuestionId;
+
+                // Update the game in the state
+                updatedState.games = updatedState.games.map((g) =>
+                  g.id === newGame.id ? shuffledGame : g
+                );
+
+                setAppState(updatedState);
+                setResumeModalOpen(false); // Close resume modal when starting new game
               }}
             />
           </div>
-        </div>
-
-        {/* Question Card - takes most of the screen on mobile */}
-        <div className="flex-1 flex items-center justify-center p-4">
-          <QuestionCard 
-            question={currentQuestion || null} 
-            autoTts={appSettings.globalAutoRead}
-            autoAdvanceDelayMs={appSettings.autoAdvanceDelayMs}
-            onAutoAdvance={handleMarkAnswered}
-          />
-        </div>
-
-        {/* Action Buttons - bottom anchored, thumb-friendly */}
-        <div className="p-4 pb-safe bg-surface border-t border-border space-y-3">
-          <ActionButtons
-            onMarkAnswered={handleMarkAnswered}
-            onSkip={handleSkip}
-            disabled={availableQuestions.length === 0}
-          />
-
-          {/* Secondary actions - subtle on mobile */}
-          <div className="flex items-center justify-between text-xs">
-            {/* Custom Questions - Pro only */}
-            {appSettings.tierMode === "pro" && (
-              <button
-                onClick={() => setCustomQuestionsOpen(true)}
-                className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
-              >
-                My Questions
-              </button>
-            )}
-            
-            {/* Car Mode toggle - Pro only */}
-            {appSettings.tierMode === "pro" && (
-              <button
-                onClick={() => setCarMode(true)}
-                className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
-                title="Enable Car Mode for driving"
-              >
-                🚗 Car Mode
-              </button>
-            )}
-            
-            {/* Settings toggle */}
+          {/* Cog Wheel Button - Fixed Bottom Right (only on startup screen with saved games) */}
+          {hasGames && (
             <button
-              onClick={() => setSettingsOpen(true)}
-              className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
-              title="Settings"
+              onClick={() => setResumeModalOpen(true)}
+              className="fixed bottom-6 right-6 w-12 h-12 bg-surface border border-border rounded-full shadow-lg hover:bg-track transition-all hover:scale-110 active:scale-95 z-40 flex items-center justify-center group"
+              title="Saved Sessions"
+              aria-label="Open saved sessions"
             >
-              ⚙️ Settings
+              <svg 
+                className="w-6 h-6 text-text-secondary group-hover:text-text-primary transition-colors" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={1.5} 
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" 
+                />
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={1.5} 
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" 
+                />
+              </svg>
             </button>
-            
-            {/* Category filter trigger - mobile optimized */}
-            <details className="relative">
-              <summary className="list-none cursor-pointer text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-                </svg>
-                Filter
-              </summary>
-              <div className="absolute bottom-full right-0 mb-2 bg-surface border border-border rounded-xl shadow-lg p-3 min-w-48">
-                <CategoryFilter
-                  activeCategories={activeGame.activeCategories}
-                  onCategoryChange={handleCategoryChange}
-                  relationshipMode={activeGame.relationshipMode}
-                  customQuestionsExist={appState.customQuestions.length > 0}
+          )}
+        </>
+      ) : (
+        /* Game screen */
+        <div className="min-h-screen bg-bg flex flex-col">
+          {/* Simple Header - compact for mobile */}
+          <header className="bg-surface border-b border-border px-4 py-2 flex items-center justify-between sticky top-0 z-10">
+            <button
+              onClick={() => setAppState({ ...appState, activeGameId: null })}
+              className="text-base font-semibold text-text-primary hover:text-accent transition-colors cursor-pointer"
+              title="Back to Home"
+              aria-label="Back to Home"
+            >
+              🎯 Curiosity Hour
+            </button>
+            <div className="flex items-center gap-2">
+              {!isPro && (
+                <button
+                  onClick={() => setUpgradeModalOpen(true)}
+                  className="inline-flex items-center gap-1 bg-accent/10 text-accent px-2 py-1 rounded-lg text-xs font-medium hover:bg-accent/20 transition-colors"
+                >
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                  </svg>
+                  Pro
+                </button>
+              )}
+              {isPro && (
+                <span className="inline-flex items-center gap-1 text-accent text-xs font-medium">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                  </svg>
+                  Pro
+                </span>
+              )}
+              <GameSwitcher
+                games={appState.games}
+                activeGameId={appState.activeGameId}
+                onSelectGame={handleSelectGame}
+                onNewGame={handleNewGame}
+              />
+            </div>
+          </header>
+
+          {/* Main Content - mobile-first layout */}
+          <main className="flex-1 flex flex-col w-full">
+            {/* Progress indicator - minimal on mobile */}
+            <div className="px-4 pt-3">
+              <div className="flex items-center justify-between text-xs text-text-secondary mb-1">
+                <span>{activeGame.answeredIds.length} answered</span>
+                <span>{availableQuestions.length} remaining</span>
+              </div>
+              <div className="h-1.5 bg-track rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-accent transition-all duration-300"
+                  style={{ 
+                    width: `${availableQuestions.length + activeGame.answeredIds.length > 0 
+                      ? (activeGame.answeredIds.length / (availableQuestions.length + activeGame.answeredIds.length)) * 100 
+                      : 0}%` 
+                  }}
                 />
               </div>
-            </details>
+            </div>
 
-            <button
-              onClick={() => setResetDialogOpen(true)}
-              className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
-            >
-              Reset
-            </button>
-          </div>
+            {/* Question Card - takes most of the screen on mobile */}
+            <div className="flex-1 flex items-center justify-center p-4">
+              <QuestionCard 
+                question={currentQuestion || null} 
+                autoTts={appSettings.globalAutoRead}
+                autoAdvanceDelayMs={appSettings.autoAdvanceDelayMs}
+                onAutoAdvance={handleMarkAnswered}
+              />
+            </div>
+
+            {/* Action Buttons - bottom anchored, thumb-friendly */}
+            <div className="p-4 pb-safe bg-surface border-t border-border space-y-3">
+              <ActionButtons
+                onMarkAnswered={handleMarkAnswered}
+                onSkip={handleSkip}
+                disabled={availableQuestions.length === 0}
+              />
+
+              {/* Secondary actions - subtle on mobile */}
+              <div className="flex items-center justify-between text-xs">
+                {/* Custom Questions - Pro only */}
+                {appSettings.tierMode === "pro" && (
+                  <button
+                    onClick={() => setCustomQuestionsOpen(true)}
+                    className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
+                  >
+                    My Questions
+                  </button>
+                )}
+                
+                {/* Car Mode toggle - Pro only */}
+                {appSettings.tierMode === "pro" && (
+                  <button
+                    onClick={() => setCarMode(true)}
+                    className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
+                    title="Enable Car Mode for driving"
+                  >
+                    🚗 Car Mode
+                  </button>
+                )}
+                
+                {/* Settings toggle */}
+                <button
+                  onClick={() => setSettingsOpen(true)}
+                  className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
+                  title="Settings"
+                >
+                  ⚙️ Settings
+                </button>
+                
+                {/* Category filter trigger - mobile optimized */}
+                <details className="relative">
+                  <summary className="list-none cursor-pointer text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                    </svg>
+                    Filter
+                  </summary>
+                  <div className="absolute bottom-full right-0 mb-2 bg-surface border border-border rounded-xl shadow-lg p-3 min-w-48">
+                    <CategoryFilter
+                      activeCategories={activeGame.activeCategories}
+                      onCategoryChange={handleCategoryChange}
+                      relationshipMode={activeGame.relationshipMode}
+                      customQuestionsExist={appState.customQuestions.length > 0}
+                    />
+                  </div>
+                </details>
+
+                <button
+                  onClick={() => setResetDialogOpen(true)}
+                  className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+
+            {/* Cog Wheel Button - Hidden during gameplay (only shown on startup screen) */}
+          </main>
+
+          {/* Ad banner for free users in basic mode */}
+          {appSettings.tierMode === "basic" && !isPro && (
+            <AdBanner onUpgrade={() => setUpgradeModalOpen(true)} />
+          )}
         </div>
-
-        {/* Cog Wheel Button - Hidden during gameplay (only shown on startup screen) */}
-      </main>
-
-      {/* Ad banner for free users in basic mode */}
-      {appSettings.tierMode === "basic" && !isPro && (
-        <AdBanner onUpgrade={() => setUpgradeModalOpen(true)} />
       )}
 
-      {/* Dialogs */}
+      {/* Global Dialogs - Always rendered regardless of screen state */}
       <SettingsPanel
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
@@ -527,6 +527,6 @@ export default function Home() {
         onClose={() => setUpgradeModalOpen(false)}
         onUpgrade={upgradeToPro}
       />
-    </div>
+    </>
   );
 }
