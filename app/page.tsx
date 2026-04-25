@@ -216,6 +216,7 @@ export default function Home() {
       ...appState,
       activeGameId: null,
     });
+    setResumeModalOpen(false); // Close resume modal when starting new game from switcher
   };
 
   const handleResetProgress = () => {
