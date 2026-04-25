@@ -52,9 +52,6 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  // Show loading until we've checked Pro status
-  if (!mounted || isProLoading) return null;
-
   const hasGames = appState.games.length > 0;
   const activeGame = appState.games.find((g) => g.id === appState.activeGameId);
   const allQuestions = getAllQuestions(appState.customQuestions);
@@ -248,10 +245,10 @@ export default function Home() {
   const isWelcomeScreen = !hasGames || !activeGame;
   const isCarModeView = carMode && hasGames && activeGame;
 
-  return (
-    <>
-      {/* Main Content Area - conditional rendering based on state */}
-      {isCarModeView ? (
+  // Build main content based on current view
+  const mainContent = (() => {
+    if (isCarModeView) {
+      return (
         <CarModeView
           question={currentQuestion || null}
           onNext={handleMarkAnswered}
@@ -269,8 +266,11 @@ export default function Home() {
           disabled={availableQuestions.length === 0}
           autoTts={true} // Car Mode always has auto-read enabled for safety
         />
-      ) : isWelcomeScreen ? (
-        /* Welcome screen with slide-up drawer effect */
+      );
+    }
+
+    if (isWelcomeScreen) {
+      return (
         <>
           {/* Main Welcome Screen Container - slides up when resume modal is open */}
           <div
@@ -343,154 +343,205 @@ export default function Home() {
             </button>
           )}
         </>
-      ) : (
-        /* Game screen */
-        <div className="min-h-screen bg-bg flex flex-col">
-          {/* Simple Header - compact for mobile */}
-          <header className="bg-surface border-b border-border px-4 py-2 flex items-center justify-between sticky top-0 z-10">
-            <button
-              onClick={() => setAppState({ ...appState, activeGameId: null })}
-              className="text-base font-semibold text-text-primary hover:text-accent transition-colors cursor-pointer"
-              title="Back to Home"
-              aria-label="Back to Home"
-            >
-              🎯 Curiosity Hour
-            </button>
-            <div className="flex items-center gap-2">
-              {!isPro && (
-                <button
-                  onClick={() => setUpgradeModalOpen(true)}
-                  className="inline-flex items-center gap-1 bg-accent/10 text-accent px-2 py-1 rounded-lg text-xs font-medium hover:bg-accent/20 transition-colors"
-                >
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-                  </svg>
-                  Pro
-                </button>
-              )}
-              {isPro && (
-                <span className="inline-flex items-center gap-1 text-accent text-xs font-medium">
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-                  </svg>
-                  Pro
-                </span>
-              )}
-              <GameSwitcher
-                games={appState.games}
-                activeGameId={appState.activeGameId}
-                onSelectGame={handleSelectGame}
-                onNewGame={handleNewGame}
+      );
+    }
+
+    // Game screen
+    return (
+      <div className="min-h-screen bg-bg flex flex-col">
+        {/* Simple Header - compact for mobile */}
+        <header className="bg-surface border-b border-border px-4 py-2 flex items-center justify-between sticky top-0 z-10">
+          <button
+            onClick={() => setAppState({ ...appState, activeGameId: null })}
+            className="text-base font-semibold text-text-primary hover:text-accent transition-colors cursor-pointer"
+            title="Back to Home"
+            aria-label="Back to Home"
+          >
+            🎯 Curiosity Hour
+          </button>
+          <div className="flex items-center gap-2">
+            {!isPro && (
+              <button
+                onClick={() => setUpgradeModalOpen(true)}
+                className="inline-flex items-center gap-1 bg-accent/10 text-accent px-2 py-1 rounded-lg text-xs font-medium hover:bg-accent/20 transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                </svg>
+                Pro
+              </button>
+            )}
+            {isPro && (
+              <span className="inline-flex items-center gap-1 text-accent text-xs font-medium">
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                </svg>
+                Pro
+              </span>
+            )}
+            <GameSwitcher
+              games={appState.games}
+              activeGameId={appState.activeGameId}
+              onSelectGame={handleSelectGame}
+              onNewGame={handleNewGame}
+            />
+          </div>
+        </header>
+
+        {/* Main Content - mobile-first layout */}
+        <main className="flex-1 flex flex-col w-full">
+          {/* Progress indicator - minimal on mobile */}
+          <div className="px-4 pt-3">
+            <div className="flex items-center justify-between text-xs text-text-secondary mb-1">
+              <span>{activeGame.answeredIds.length} answered</span>
+              <span>{availableQuestions.length} remaining</span>
+            </div>
+            <div className="h-1.5 bg-track rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-accent transition-all duration-300"
+                style={{ 
+                  width: `${availableQuestions.length + activeGame.answeredIds.length > 0 
+                    ? (activeGame.answeredIds.length / (availableQuestions.length + activeGame.answeredIds.length)) * 100 
+                    : 0}%` 
+                }}
               />
             </div>
-          </header>
+          </div>
 
-          {/* Main Content - mobile-first layout */}
-          <main className="flex-1 flex flex-col w-full">
-            {/* Progress indicator - minimal on mobile */}
-            <div className="px-4 pt-3">
-              <div className="flex items-center justify-between text-xs text-text-secondary mb-1">
-                <span>{activeGame.answeredIds.length} answered</span>
-                <span>{availableQuestions.length} remaining</span>
-              </div>
-              <div className="h-1.5 bg-track rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-accent transition-all duration-300"
-                  style={{ 
-                    width: `${availableQuestions.length + activeGame.answeredIds.length > 0 
-                      ? (activeGame.answeredIds.length / (availableQuestions.length + activeGame.answeredIds.length)) * 100 
-                      : 0}%` 
-                  }}
-                />
-              </div>
-            </div>
+          {/* Question Card - takes most of the screen on mobile */}
+          <div className="flex-1 flex items-center justify-center p-4">
+            <QuestionCard 
+              question={currentQuestion || null} 
+              autoTts={appSettings.globalAutoRead}
+              autoAdvanceDelayMs={appSettings.autoAdvanceDelayMs}
+              onAutoAdvance={handleMarkAnswered}
+            />
+          </div>
 
-            {/* Question Card - takes most of the screen on mobile */}
-            <div className="flex-1 flex items-center justify-center p-4">
-              <QuestionCard 
-                question={currentQuestion || null} 
-                autoTts={appSettings.globalAutoRead}
-                autoAdvanceDelayMs={appSettings.autoAdvanceDelayMs}
-                onAutoAdvance={handleMarkAnswered}
-              />
-            </div>
+          {/* Action Buttons - bottom anchored, thumb-friendly */}
+          <div className="p-4 pb-safe bg-surface border-t border-border space-y-3">
+            <ActionButtons
+              onMarkAnswered={handleMarkAnswered}
+              onSkip={handleSkip}
+              disabled={availableQuestions.length === 0}
+            />
 
-            {/* Action Buttons - bottom anchored, thumb-friendly */}
-            <div className="p-4 pb-safe bg-surface border-t border-border space-y-3">
-              <ActionButtons
-                onMarkAnswered={handleMarkAnswered}
-                onSkip={handleSkip}
-                disabled={availableQuestions.length === 0}
-              />
-
-              {/* Secondary actions - subtle on mobile */}
-              <div className="flex items-center justify-between text-xs">
-                {/* Custom Questions - Pro only */}
-                {appSettings.tierMode === "pro" && (
-                  <button
-                    onClick={() => setCustomQuestionsOpen(true)}
-                    className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
-                  >
-                    My Questions
-                  </button>
-                )}
-                
-                {/* Car Mode toggle - Pro only */}
-                {appSettings.tierMode === "pro" && (
-                  <button
-                    onClick={() => setCarMode(true)}
-                    className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
-                    title="Enable Car Mode for driving"
-                  >
-                    🚗 Car Mode
-                  </button>
-                )}
-                
-                {/* Settings toggle */}
+            {/* Secondary actions - subtle on mobile */}
+            <div className="flex items-center justify-between text-xs">
+              {/* Custom Questions - Pro only */}
+              {appSettings.tierMode === "pro" && (
                 <button
-                  onClick={() => setSettingsOpen(true)}
-                  className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
-                  title="Settings"
-                >
-                  ⚙️ Settings
-                </button>
-                
-                {/* Category filter trigger - mobile optimized */}
-                <details className="relative">
-                  <summary className="list-none cursor-pointer text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-                    </svg>
-                    Filter
-                  </summary>
-                  <div className="absolute bottom-full right-0 mb-2 bg-surface border border-border rounded-xl shadow-lg p-3 min-w-48">
-                    <CategoryFilter
-                      activeCategories={activeGame.activeCategories}
-                      onCategoryChange={handleCategoryChange}
-                      relationshipMode={activeGame.relationshipMode}
-                      customQuestionsExist={appState.customQuestions.length > 0}
-                    />
-                  </div>
-                </details>
-
-                <button
-                  onClick={() => setResetDialogOpen(true)}
+                  onClick={() => setCustomQuestionsOpen(true)}
                   className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
                 >
-                  Reset
+                  My Questions
                 </button>
-              </div>
+              )}
+              
+              {/* Car Mode toggle - Pro only */}
+              {appSettings.tierMode === "pro" && (
+                <button
+                  onClick={() => setCarMode(true)}
+                  className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
+                  title="Enable Car Mode for driving"
+                >
+                  🚗 Car Mode
+                </button>
+              )}
+              
+              {/* Settings toggle */}
+              <button
+                onClick={() => setSettingsOpen(true)}
+                className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1"
+                title="Settings"
+              >
+                ⚙️ Settings
+              </button>
+              
+              {/* Category filter trigger - mobile optimized */}
+              <details className="relative">
+                <summary className="list-none cursor-pointer text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                  </svg>
+                  Filter
+                </summary>
+                <div className="absolute bottom-full right-0 mb-2 bg-surface border border-border rounded-xl shadow-lg p-3 min-w-48">
+                  <CategoryFilter
+                    activeCategories={activeGame.activeCategories}
+                    onCategoryChange={handleCategoryChange}
+                    relationshipMode={activeGame.relationshipMode}
+                    customQuestionsExist={appState.customQuestions.length > 0}
+                  />
+                </div>
+              </details>
+
+              <button
+                onClick={() => setResetDialogOpen(true)}
+                className="text-text-secondary hover:text-text-primary py-2 px-3 -mx-3 rounded-lg transition-colors"
+              >
+                Reset
+              </button>
             </div>
+          </div>
 
-            {/* Cog Wheel Button - Hidden during gameplay (only shown on startup screen) */}
-          </main>
+          {/* Cog Wheel Button - Hidden during gameplay (only shown on startup screen) */}
+        </main>
 
-          {/* Ad banner for free users in basic mode */}
-          {appSettings.tierMode === "basic" && !isPro && (
-            <AdBanner onUpgrade={() => setUpgradeModalOpen(true)} />
-          )}
+        {/* Ad banner for free users in basic mode - rendered in game screen */}
+        {appSettings.tierMode === "basic" && !isPro && (
+          <AdBanner onUpgrade={() => setUpgradeModalOpen(true)} />
+        )}
+      </div>
+    );
+  })();
+
+  // Show loading until we've checked Pro status
+  if (!mounted || isProLoading) {
+    return (
+      <>
+        <div className="min-h-screen bg-bg flex items-center justify-center">
+          <div className="text-text-secondary">Loading...</div>
         </div>
-      )}
+        {/* Global Dialogs - Always rendered regardless of screen state */}
+        <SettingsPanel isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
+        <CustomQuestions
+          questions={appState.customQuestions}
+          onAdd={handleAddCustomQuestion}
+          onEdit={handleEditCustomQuestion}
+          onDelete={handleDeleteCustomQuestion}
+          isOpen={customQuestionsOpen}
+          onClose={() => setCustomQuestionsOpen(false)}
+        />
+        <ResetDialog
+          onResetProgress={handleResetProgress}
+          onNewGame={handleNewGame}
+          isOpen={resetDialogOpen}
+          onClose={() => setResetDialogOpen(false)}
+        />
+        <ResumeGameModal
+          isOpen={resumeModalOpen}
+          onClose={() => setResumeModalOpen(false)}
+          games={appState.games}
+          activeGameId={appState.activeGameId}
+          onResumeGame={handleResumeGame}
+          onDeleteGame={handleDeleteGame}
+        />
+        <ProUpgradeModal
+          isOpen={upgradeModalOpen}
+          onClose={() => setUpgradeModalOpen(false)}
+          onUpgrade={upgradeToPro}
+        />
+        {appSettings.tierMode === "basic" && !isPro && <AdBanner onUpgrade={() => setUpgradeModalOpen(true)} />}
+      </>
+    );
+  }
+
+  // SINGLE FINAL RETURN - All screens and modals rendered here
+  return (
+    <>
+      {/* Main Content - conditional based on view state */}
+      {mainContent}
 
       {/* Global Dialogs - Always rendered regardless of screen state */}
       <SettingsPanel
@@ -528,6 +579,11 @@ export default function Home() {
         onClose={() => setUpgradeModalOpen(false)}
         onUpgrade={upgradeToPro}
       />
+
+      {/* Ad banner for free users in basic mode - always in DOM */}
+      {appSettings.tierMode === "basic" && !isPro && (
+        <AdBanner onUpgrade={() => setUpgradeModalOpen(true)} />
+      )}
     </>
   );
 }
